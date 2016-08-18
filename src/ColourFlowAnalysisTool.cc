@@ -14,6 +14,7 @@ void ColourFlowAnalysisTool::Work()
 {
   PlotAngleBetweenJets();
   PlotJetDimensions();
+  AnalyseParticleFlow();
   for (VectorCode_t jet1_code = 0; jet1_code < 2; jet1_code ++)
     {
       for (ChargeCode_t charge_code = 0; charge_code < 2; charge_code ++)
@@ -25,7 +26,6 @@ void ColourFlowAnalysisTool::Work()
 		tag_levels_[work_mode_] + "_" + 
 		tag_jet_types_[jet1_code] + "_" + 
 		tag_channel_;
-	      printf("%s\n", suffix.Data());
 	      if (fabs(pull_vector.phi_component) > 0.015 or fabs(pull_vector.eta_component) > 0.015)
 		{
 		  Fill1D(TString("phi_PV_bckg") + suffix, pull_vector.phi_component);
@@ -107,7 +107,6 @@ void ColourFlowAnalysisTool::Work()
 	      for (VectorCode_t jet2_code = 0; jet2_code < CFAT_Event::N_jet_types_; jet2_code ++)
 		{
 		  const TLorentzVector * jet2 = GetEvent() -> GetVector(jet2_code);
-		  
 		  if (jet2_code == jet1_code)
 		    continue;
 		  if (not jet2)

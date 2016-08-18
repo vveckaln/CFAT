@@ -4,20 +4,10 @@
 template<typename TargetType, typename CreateHistoType>
 void AssignHistograms_raw(TargetType &, CreateHistoType); 
 
-template<typename atype, typename btype>
-void sum(atype, btype);
-
 #endif
 
 #include "CFAT_Event.hh"
 #include "Definitions.hh"
-
-
-template<typename atype, typename btype>
-void sum(atype a, btype b)
-{
-  printf("%f\n", a + b);
-}
 
 using namespace Definitions;
 template<typename TargetType, typename CreateHistoType>
@@ -216,22 +206,27 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 		  }
 		}
 	    }
-	  /*
-	  for (unsigned char charge_index = 0; charge_index < 2; charge_index ++)
-	    {
-	      for (unsigned char particle_index = 0; particle_index < 2; particle_index ++)
-		{
-		  const TString hash_key = TString("chi_") + tag_charge_types_[charge_index] + "_" + tag_levels_[level_index] + "_" + tag_DeltaR_types_[DeltaR_index] + "_" + particles[particle_index];
-		  plots_ptr_ -> operator[](hash_key) = new TH1F(hash_key, hash_key + "; #chi; Events", 50, -0.1, 2.1);
-		}
-	    }
-	  */
+
 	}
     }
+  for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
+    { 
+	  
+      for (ChargeCode_t charge_code = 0; charge_code < N_charge_types_; charge_code ++)
+	{
+	  for (unsigned char particle_index = 0; particle_index < N_particles_types_; particle_index ++)
+	    {
+	      const TString hash_key = TString("chi_") + tag_charge_types_[charge_code] + "_" + tag_levels_[level_code] + "_" + tag_particles_types_[particle_index];
+	      CreateHistogram1DT(target, hash_key, "; #chi; Events", 75, -0.1, 3.1);
+	      
+	    }
+	}
+    }
+
   /*
   plots_ptr_ -> operator[]("had_b_flavour")              = new TH1F("had_b_flavour", "had_b_flavour; flavour; Events", 21, -10.5, 10.5);
   plots_ptr_ -> operator[]("lept_b_flavour")             = new TH1F("lept_b_flavour", "lept_b_flavour; flavour; Events", 21, -10.5, 10.5);
-
+111111111
   plots_ptr_ -> operator[]("leading_jet_flavour")        = new TH1F("leading_jet_flavour", "leading_jet_flavour; flavour; Events", 21, -10.5, 10.5);
   plots_ptr_ -> operator[]("second_leading_jet_flavour") = new TH1F("second_leading_jet_flavour", "second_leading_jet_flavour; flavour; Events", 21, -10.5, 10.5);
   */

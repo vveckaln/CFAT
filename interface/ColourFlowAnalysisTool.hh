@@ -32,6 +32,7 @@ public:
   void PlotAngleBetweenJets() const;
   void PlotJetDimensions() const;
   void Do();
+  void AnalyseParticleFlow() const;
 };
 
 #endif

@@ -6,7 +6,7 @@ void pf::Do()
   printf("Hello from pf %p\n", this);
 }
 
-void pf::ls_particle() const
+void pf::ls() const
 {
   const TLorentzVector  lv = GetLorentzVector();
   printf("Pt %f Px %f Py %f Pz %f E %f\n", lv.Pt(), lv.Px(), lv.Py(), lv.Pz(), lv.E());
@@ -16,7 +16,8 @@ void pf::ls_particle() const
 CFAT_Core::pf_iter::pf_iter()
 {
   iter_core_ptr_ = NULL;
-  CanDelete_ = true;
+  CanDelete_     = true;
+  tracked_vector_code_    = 255;
 }
 
 
@@ -41,9 +42,16 @@ void CFAT_Core::pf_iter::SetCore(CFAT_Core & other)
   core_ptr_ = & other;
 }
 
+CFAT_Core * CFAT_Core::pf_iter::GetCore() const
+{
+  return core_ptr_;
+}
+
+ 
 void CFAT_Core::pf_iter::SetIterCore(pf_iter_core & other)
 {
   iter_core_ptr_ = & other;
+  other.iter_ptr_ = this;
 }
 
 void CFAT_Core::pf_iter::SetDeleteOption(bool option)
@@ -51,6 +59,15 @@ void CFAT_Core::pf_iter::SetDeleteOption(bool option)
   CanDelete_ = option;
 }
 
+void CFAT_Core::pf_iter::SetTrackedVectorCode(VectorCode_t code)
+{
+  tracked_vector_code_ = code;
+}
+
+VectorCode_t CFAT_Core::pf_iter::GetTrackedVectorCode() const
+{
+  return tracked_vector_code_;
+}
 
 CFAT_Core::pf_iter::~pf_iter()
 {
@@ -92,6 +109,11 @@ CFAT_Core::pf_iter_core::~pf_iter_core()
 void CFAT_Core::pf_iter_core::Do()
 {
   printf("Hello from CFAT_Core::pf_iter_core %p\n", this);
+}
+
+CFAT_Core::pf_iter * CFAT_Core::pf_iter_core::GetIter() const
+{
+  return iter_ptr_;
 }
 
 void CFAT_Core::pf_iter_core::WhoAmI()

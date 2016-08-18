@@ -14,6 +14,12 @@ PullVector::PullVector(Double_t phi, Double_t eta): TVector2(phi, eta)
   origin_event_ptr_ = NULL;
 }
 
+void PullVector::ls() const
+{
+  printf("phi %f eta %f\n", phi_component, eta_component);
+}
+
+
 CFAT_Event::store_struct::store_struct() 
 {
   had_W = TLorentzVector(0.0, 0.0, 0.0, 0.0); 
@@ -194,6 +200,7 @@ double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2) const
 {
   const TLorentzVector * jet1 = GetVector(pv.origin_jet);
   const TLorentzVector * jet2 = GetVector(code2);
+  
   //printf("Calculating pull angle Pt %f Phi %f Rapidity %f \n", jet2 -> Pt(), jet2 -> Phi(), jet2 -> Rapidity());
   if (not jet1 or not jet2)
     throw "double CFAT_Event::PullAngle(const PullVector &, VectorCode_t) : null vectors. Please Check!";
@@ -206,7 +213,11 @@ double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2) const
     {
       
       const TVector2 jet_difference(jet2 -> Phi() - jet1 -> Phi(), jet2 -> Rapidity() - jet1 -> Rapidity());
-      /*{
+      
+      
+  
+     
+ /*{
 	PullVector pull_vector = pv;
 	const float magnitude_pull = pull_vector.Mod();
 	const float phi_dif = jet_difference.Px();
@@ -223,67 +234,12 @@ double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2) const
       }	  
       const double result = TVector2::Phi_mpi_pi(jet_difference.Phi() - pv.Phi());
       printf(" result %f \n", result);*/
+      if (std::isnan(jet_difference.Phi() - pv.Phi()))
+	{
+	  throw "double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2) const: result NaN";
+	}
       return TVector2::Phi_mpi_pi(jet_difference.Phi() - pv.Phi());//Must be pv.Phi()
     }
       
 }
 
-/*
-PullVector CFAT_Event::CalculatePullVector(VectorCode_t vector_code, ChargeCode_t charge_code, PF_PTCutCode_t pf_ptcut_code) const
-{
-  PullVector ret(0.0, 0.0);
-  
-  ret.origin_jet = vector_code;
-  ret.origin_event_ptr_ = this;
-  TLorentzVector charged_jet;
-  if (charge_code == CHARGED)
-    charged_jet = GetChargedJet(vector_code);
-  const TLorentzVector * jet = charge_code == ALLCOMP ? GetVector(vector_code) : & charged_jet;
-  const TVector2 jetV2(jet -> Phi(), jet -> Rapidity());
-  double Pt_jet_constituents = 0.0;
-  for (unsigned int jet_const_index = 0; jet_const_index < PF.size; jet_const_index ++)
-    {
-      TLorentzVector constituent_4vector ;
-      if (PF.jet_index[jet_const_index] != GetIndex(vector_code))
-	continue;
-      if (charge_code == CHARGED and PF.charge[jet_const_index] == 0)
-	continue;
-      constituent_4vector = PF.GetPF(jet_const_index);
-      if (pf_ptcut_code == PF_PT_LE_0p5_GEV and constituent_4vector.Pt() > 0.5)
-	continue;
-      if (pf_ptcut_code == PF_PT_GT_0p5_GEV and constituent_4vector.Pt() <= 0.5)
-	continue;
-      Pt_jet_constituents += constituent_4vector.Pt();
-      const TVector2 componentV2 = TVector2(
-					  TVector2::Phi_mpi_pi(constituent_4vector.Phi()), 
-					  constituent_4vector.Rapidity())
-	- jetV2;
-      const double mag = componentV2.Mod();
-      ret += mag * componentV2 * constituent_4vector.Pt();
-      ret.Ncomponents ++;
-    }
-  if (Pt_jet_constituents < 1E-10)
-    throw "PullVector CFAT_Event::CalculatePullVector(VectorCode_t, ChargeCode_t, PF_PTCutCode_t) const: Zero components";
-  const double scale =  Pt_jet_constituents;
-  ret /= scale;
-  return ret;
-  }*/
-/*
-TLorentzVector CFAT_Event::GetChargedJet(VectorCode_t vector_code) const
-{
-  TLorentzVector charged_jet(0, 0, 0, 0);
-  for (unsigned int jet_const_index = 0; jet_const_index < PF.size; jet_const_index ++)
-    {
-      TLorentzVector constituent_4vector ;
-      if (PF.jet_index[jet_const_index] != GetIndex(vector_code))
-	continue;
-      if (PF.charge[jet_const_index] == 0)
-	continue;
-      constituent_4vector = PF.GetPF(jet_const_index);
-      charged_jet += constituent_4vector;
-      
-    }
-    
-  return charged_jet;
-}
-*/

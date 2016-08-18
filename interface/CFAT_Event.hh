@@ -26,6 +26,7 @@ struct PullVector: public TVector2
   Double_t           & eta_component = fY;
   unsigned short     Ncomponents;
   VectorCode_t       origin_jet;
+  void ls() const;
   const CFAT_Core  * origin_core_ptr_;
   const CFAT_Event * origin_event_ptr_;
 };
