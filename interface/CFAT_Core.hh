@@ -1,32 +1,25 @@
 
 #ifndef _CFAT_Core_hh_
 #define _CFAT_Core_hh_
+//#include "PullVector.hh"
+
 #include "CFAT_Event.hh"
 #include "Definitions.hh"
-
 #include "TLorentzVector.h"
+#include "pf.hh"
 
-class pf
-{
-  
-public:
-  virtual double GetCharge() const = 0;
-  virtual TLorentzVector GetLorentzVector() const = 0;
-  
-  void ls() const;
-
-  void Do();
-};
-
+class PullVector;
 class CFAT_Core
 {
   friend class CFAT_Event;
   friend class ColourFlowAnalysisTool;
 protected:
   virtual const TLorentzVector *& GetVectorRef(VectorCode_t code) = 0; 
-
+  unsigned char event_display_mode_;
   WorkCode_t work_mode_;
-  const void * event_ptr_;
+  const void     * event_ptr_;
+  CFAT_Event * cfat_event_;
+
   class pf_iter_core;
   class pf_iter
   {
@@ -40,6 +33,7 @@ protected:
   public:
     ~pf_iter();
     pf_iter();
+
     bool operator != (const pf_iter &) ;
     pf_iter  operator++(int);
     pf * operator -> ();
@@ -81,14 +75,21 @@ protected:
   virtual pf_iter end() = 0;
   virtual void SetWorkMode(WorkCode_t work_code) = 0;
 
-
+ 
   PullVector                       CalculatePullVector(VectorCode_t, ChargeCode_t = ALLCOMP, PF_PTCutCode_t = PF_PT_TOTAL) ; 
-  TLorentzVector GetChargedJet(VectorCode_t vector_code) ;
+  PullVector                       CalculatePullVectorEXP(VectorCode_t, VectorCode_t, ChargeCode_t = ALLCOMP, PF_PTCutCode_t = PF_PT_TOTAL) ; 
+
+  void AnalyseJetConstituents();
+  TLorentzVector GetJetFromParticles(VectorCode_t vector_code, ChargeCode_t = ALLCOMP) ;
   virtual const TLorentzVector * GetVector(VectorCode_t) = 0;
   
   virtual void check(const char * = "") const = 0;
+  void EventDisplay(const PullVector & pv, float pull_angle/*, const TVector2 & jet_difference*/, ChargeCode_t = ALLCOMP);
 public:
-  
+  CFAT_Core();
+  CFAT_Event * GetCFATEvent();
+  void SetEventDisplayMode(unsigned char);
+  void ls_particles(VectorCode_t);
 };
 
 

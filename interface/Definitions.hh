@@ -1,14 +1,23 @@
 #ifndef _Definitions_hh_
 #define _Definitions_hh_
 
+#define N_channels_types 3
+#include "TH1F.h"
 namespace Definitions
 {
+
   enum VectorEnum_t     {LEADING_JET, SCND_LEADING_JET, HAD_B, HAD_W, HAD_T, LEPTON, NEUTRINO, LEPT_B, LEPT_W, LEPT_T, BEAM, FAKE, ALLJETS = 255 };
   enum ParticlesEnum_t  {ALLPRT, JETPRT};
+  enum ChargeEnum_t     {ALLCOMP, CHARGED};
+  enum DeltaRCutEnum_t  {DELTAR_TOTAL, DELTAR_LE_1p0, DELTAR_GT_1p0};
+  enum PF_PTCutEnum_t   {PF_PT_TOTAL, PF_PT_LE_0p5_GEV, PF_PT_GT_0p5_GEV};
+  enum HadW_PtCutEnum_t {HADW_PT_TOTAL, HADW_PT_LE_50p0_GEV, HADW_PT_GT_50p0_GEV}; 
+  enum PFNEnum_t        {PFN_TOTAL, PFN_LE_20, PFN_GT_20};
+  enum PVMagEnum_t      {PVMAG_TOTAL, PVMAG_LE_0p005, PVMAG_GT_0p005};
+  enum Channel_t        {L, E, M};
+
   typedef unsigned char VectorCode_t;
-
-  extern const char          * tag_channel_;
-
+  typedef unsigned char ChannelCode_t;
   extern const char            N_charge_types_;
   extern const char          * tag_charge_types_[2];
 
@@ -35,5 +44,10 @@ namespace Definitions
 
   extern const char            N_particles_types_;
   extern const char          * tag_particles_types_[];
+
+  extern const char            N_channels_types_;
+  extern const char          * channels_types_[];
+
 };
+void Do(TH1F);
 #endif

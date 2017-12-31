@@ -1,23 +1,12 @@
 
 #include "CFAT_Event.hh"
 #include "CFAT_Core.hh"
-
+#include "PullVector.hh"
 //const int N_jet_types_ = 12;
 //const unsigned char N_charge_types_ = 2;
 const TLorentzVector * CFAT_Event::beam_ptr_ = new TLorentzVector();
 
 
-PullVector::PullVector(Double_t phi, Double_t eta): TVector2(phi, eta)
-{
-  origin_jet = 255;
-  Ncomponents = 0;
-  origin_event_ptr_ = NULL;
-}
-
-void PullVector::ls() const
-{
-  printf("phi %f eta %f\n", phi_component, eta_component);
-}
 
 
 CFAT_Event::store_struct::store_struct() 
@@ -46,12 +35,14 @@ CFAT_Event::CFAT_Event()
   lept_W_ptr_                      = NULL;
   lept_t_ptr_                      = NULL;
   fake_ptr_                        = NULL;
-
+  cfat_                            = NULL;
+  core_ptr_                        = NULL;
 }
 
 void CFAT_Event::SetCore(CFAT_Core & core)
 {
   core_ptr_ = &core;
+  core.cfat_event_ = this;
 }
 
 void CFAT_Event::SetWeight(double w)
@@ -124,6 +115,12 @@ CFAT_Core * CFAT_Event::GetCore()
   return core_ptr_;
 }
 
+ColourFlowAnalysisTool * CFAT_Event::GetCFAT()
+{
+  return cfat_;
+}
+
+
 void CFAT_Event::CompleteVectors()
 {
   if (GetVector(LEADING_JET) and GetVector(SCND_LEADING_JET))
@@ -170,6 +167,17 @@ double CFAT_Event::Angle(VectorCode_t code1, VectorCode_t code2) const
       if (jet2 == beam_ptr_)
 	return TMath::ACos(jet1 -> Pz() / jet1 -> Vect().Mag());
       else
+	if ((code1 == HAD_B or code1 == HAD_T) and (code2 == HAD_B or code2 == HAD_T) and work_mode_ == 0)
+	  
+	  	  {
+		    /*  printf("code1 %u code2 %u\n", code1, code2);
+	    printf("jet 1 px %f py %f pz %f\n", jet1 -> Px(), jet1 -> Py(), jet1 -> Pz());
+	    printf("jet 2 px %f py %f pz %f\n", jet2 -> Px(), jet2 -> Py(), jet2 -> Pz());
+	    printf("angle %f\n", jet1 -> Angle(jet2 -> Vect()));
+	    printf("angle %f\n", jet1 -> Vect() . Angle(jet2 -> Vect()));
+	    printf("angle %f\n", TVector3(jet1 -> Px(), jet1 -> Py(), 0.0).Angle(TVector3(jet2 -> Px(), jet2 -> Py(), 0.0)));
+	    getchar();
+	  */  }
 	return jet1 -> Angle(jet2 -> Vect());
     }
 }
@@ -212,7 +220,7 @@ double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2) const
   else
     {
       
-      const TVector2 jet_difference(jet2 -> Phi() - jet1 -> Phi(), jet2 -> Rapidity() - jet1 -> Rapidity());
+      const TVector2 jet_difference(TVector2::Phi_mpi_pi(jet2 -> Phi() - jet1 -> Phi()), jet2 -> Rapidity() - jet1 -> Rapidity());
       
       
   
@@ -241,5 +249,49 @@ double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2) const
       return TVector2::Phi_mpi_pi(jet_difference.Phi() - pv.Phi());//Must be pv.Phi()
     }
       
+}
+
+double CFAT_Event::PullAngleEXP(const PullVector & pv, VectorCode_t code2) const
+{
+
+  //printf("double CFAT_Event::PullAngleEXP START\n");
+  const TLorentzVector * jet1 = GetVector(pv.origin_jet);
+  const TLorentzVector * jet2 = GetVector(code2);
+  if (not jet1 or not jet2)
+    throw "double CFAT_Event::PullAngle(const PullVector &, VectorCode_t) : null vectors. Please Check!";
+  if (pv.Mod() < 1E-10)
+    throw "double CFAT_Event::PullAngle(const PullVector &, VectorCode_t) : zero pull vector";
+ 
+  if (jet2 == beam_ptr_)
+    return TMath::ACos(pv.eta_component / pv.Mod());
+  else
+    {
+      TLorentzVector jet1_unboost = *jet1;
+      TLorentzVector jet2_unboost = *jet2;
+      const TLorentzVector sumjet = *jet1 + *jet2;
+      const double Msum = sumjet . M();
+      const double b_sumjet = sumjet. P()/sqrt(pow(Msum, 2) + pow(sumjet.P(), 2));
+      const double bz_sumjet = b_sumjet * sumjet.Pz()/sumjet.P();
+      const double bx_sumjet = b_sumjet * sumjet.Px()/sumjet.P(); 
+      const double by_sumjet = b_sumjet * sumjet.Py()/sumjet.P(); 
+      jet1_unboost.Boost(-bx_sumjet, -by_sumjet, -bz_sumjet);
+      jet2_unboost.Boost(-bx_sumjet, -by_sumjet, -bz_sumjet);
+      const TVector2 jet_difference(/*jet2_unboost.Phi() - jet1_unboost.Phi()*/ 0.0, jet2_unboost.Rapidity() - jet1_unboost.Rapidity());
+      //      printf("jet diff px %f py %f pv px %f py %f\n", jet_difference.Px(), jet_difference.Py(), pv.Px(), pv.Py());
+      if (std::isnan(jet_difference.Phi() - pv.Phi()))
+	{
+	  throw "double CFAT_Event::PullAngleEXP(const PullVector & pv, VectorCode_t code2) const: result NaN";
+	}
+   
+      return TVector2::Phi_mpi_pi(jet_difference.Phi() - pv.Phi());//Must be pv.Phi()
+    }
+  printf("double CFAT_Event::PullAngleEXP END\n");
+      
+}
+
+
+unsigned long CFAT_Event::GetEventNumber() const
+{
+  return event_number_;
 }
 

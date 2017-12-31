@@ -154,6 +154,7 @@ void CFAT_Core::AnalyseJetConstituents()
 	   
 
       for (unsigned char jet_index = 0; jet_index < 4; jet_index ++)
+
 	{
 	  const unsigned char vector_code = jets[jet_index];
 

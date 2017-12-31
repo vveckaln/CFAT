@@ -14,6 +14,7 @@ lib/$(LIBRARY).1.0.0:  $(OBJ_FILES)
 	gcc -shared -Wl,-soname,$(LIBRARY) -g -fPIC -o $@ $^ 
 
 lib/$(LIBRARYSL): lib/$(LIBRARY).1.0.0 
+	if [[ -f $@ ]]; then rm $@; fi;
 	ln -s $(LIBRARY).1.0.0 $@ 
 
 .PHONY: clean

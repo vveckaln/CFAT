@@ -3,8 +3,6 @@
 
 /*using namespace Definitions;
 {*/
-const char          * Definitions::tag_channel_                                = "4j2t";
-
 const char            Definitions::N_charge_types_                             = 2;
 const char          * Definitions::tag_charge_types_[2]                        = {"allconst", "chconst"};
 
@@ -14,7 +12,7 @@ const char          * Definitions::tag_jet_types_[N_jet_types_]    =
 //    0              1                  2         3       4         5        6           7          8        9         10      11         
 
 const unsigned char   Definitions::N_DeltaR_types_                             = 3;
-const char          * Definitions::tag_DeltaR_types_[N_DeltaR_types_]          = {"DeltaRTotal", "DeltaRle1.0", "DeltaRgt1.0"}; 
+const char          * Definitions::tag_DeltaR_types_[N_DeltaR_types_]          = {"DeltaRTotal", "DeltaRle1p0", "DeltaRgt1p0"}; 
 
 const unsigned char   Definitions::N_PF_Pt_cuts_                               = 3;
 const char          * Definitions::PF_Pt_cuts_types_[N_PF_Pt_cuts_]            = {"PFPtTotal", "PFPtle0p5GeV", "PFPtgt0p5GeV"};
@@ -31,6 +29,16 @@ const char          * Definitions::PVMag_cuts_types_[N_PVMag_cuts_]            =
 const char            Definitions::N_particles_types_                          = 2;
 const char          * Definitions::tag_particles_types_[N_particles_types_]    = {"allpart", "jetprt"};
 
+const char            Definitions::N_channels_types_                           = 3;
+const char          * Definitions::channels_types_[N_channels_types_]          = {"L", "E", "M"};
 
-//}
+void Do(TH1F h)
+{
+  printf("Hey %u\n", h.GetNbinsX());
+}
+
+/*
+const unsigned char   Definitions::N_levels_types_                             = 2;
+const char          * Definitions::tag_levels_[N_levels_types_]                = {"reco", "gen"};   
+*/
 
