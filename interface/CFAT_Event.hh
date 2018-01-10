@@ -74,7 +74,8 @@ public:
   unsigned long                    GetEventNumber() const;
   //  PullVector                       CalculatePullVector(VectorCode_t, ChargeCode_t = ALLCOMP, PF_PTCutCode_t = PF_PT_TOTAL) const; 
   //TVector2                         CalculatePullVectorEuclidian(const TLorentzVector & jet, unsigned char index, bool OnlyChargedConstituents) const;
-
+  double                           GetEventEnergy() const;
+  double                           GetEventPt() const;
   };
 
 #endif

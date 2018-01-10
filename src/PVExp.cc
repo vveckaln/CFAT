@@ -59,11 +59,11 @@ PullVector CFAT_Core::CalculatePullVectorEXP(VectorCode_t vector_code, VectorCod
       ret.Ncomponents ++;
       if (vector_code2 == SCND_LEADING_JET)
 	{
-	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jetsum_lab_frame")   + "_" + tag_jet_types_[HAD_W] + "_" + tag_levels_[work_mode_], b_sum);
-	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jet_lab_frame")      + "_" + tag_levels_[work_mode_], b_jet);
+	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jetsum_lab_frame")   + "_" + tag_jet_types_[HAD_W] + "_" + tag_levels_types_[work_mode_], b_sum);
+	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jet_lab_frame")      + "_" + tag_levels_types_[work_mode_], b_jet);
 
-	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jet_jetsum_frame")   + "_" + tag_levels_[work_mode_], jet1_unboost.P()/sqrt(pow(jet1_unboost.P(), 2) + pow(jet1_unboost.M(), 2)));
-	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_particle_jet_frame") + "_" + tag_levels_[work_mode_], constituent_4vector.P()/sqrt(pow(constituent_4vector.P(), 2) + pow(constituent_4vector.M(), 2)));
+	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jet_jetsum_frame")   + "_" + tag_levels_types_[work_mode_], jet1_unboost.P()/sqrt(pow(jet1_unboost.P(), 2) + pow(jet1_unboost.M(), 2)));
+	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_particle_jet_frame") + "_" + tag_levels_types_[work_mode_], constituent_4vector.P()/sqrt(pow(constituent_4vector.P(), 2) + pow(constituent_4vector.M(), 2)));
 	}
     }
   if (Pt_jet_constituents < 1E-10)

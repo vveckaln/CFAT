@@ -15,9 +15,11 @@ namespace Definitions
   enum PFNEnum_t        {PFN_TOTAL, PFN_LE_20, PFN_GT_20};
   enum PVMagEnum_t      {PVMAG_TOTAL, PVMAG_LE_0p005, PVMAG_GT_0p005};
   enum Channel_t        {L, E, M};
-
+  enum PA_plots_t       {PA_N, PA_E, PA_PT};
+  enum Sources_t        {MC, DATA};
   typedef unsigned char VectorCode_t;
   typedef unsigned char ChannelCode_t;
+  typedef unsigned char sourceCode_t;
   extern const char            N_charge_types_;
   extern const char          * tag_charge_types_[2];
 
@@ -25,7 +27,7 @@ namespace Definitions
   extern const char          * tag_jet_types_[];
 
   extern const unsigned char   N_levels_types_;
-  extern const char          * tag_levels_[];
+  extern const char          * tag_levels_types_[];
 
   extern const unsigned char   N_DeltaR_types_;
   extern const char          * tag_DeltaR_types_[];
@@ -45,8 +47,20 @@ namespace Definitions
   extern const char            N_particles_types_;
   extern const char          * tag_particles_types_[];
 
+  extern const char            N_PA_plots_types_;
+  extern const char          * tag_PA_plots_types_[];
+
   extern const char            N_channels_types_;
-  extern const char          * channels_types_[];
+  extern const char          * tag_channels_types_[];
+
+  extern const char          * jet_titles_[];
+  extern const char          * charge_titles_[];
+  extern const char          * level_titles_[];
+  extern const char          * channel_titles_[];
+
+  extern unsigned short        N_sources_types_;
+  extern const char          * tag_sources_types_[];
+  extern const char          * title_sources_types_[];
 
 };
 void Do(TH1F);

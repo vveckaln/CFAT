@@ -295,3 +295,13 @@ unsigned long CFAT_Event::GetEventNumber() const
   return event_number_;
 }
 
+double CFAT_Event::GetEventEnergy() const
+{
+  return GetVector(HAD_B) -> E() + GetVector(HAD_W) -> E() + GetVector(LEPT_B) -> E() + GetVector(LEPT_W) -> E();
+}
+
+double CFAT_Event::GetEventPt() const
+{
+  return GetVector(HAD_B) -> Pt() + GetVector(HAD_W) -> Pt() + GetVector(LEPT_B) -> Pt() + GetVector(LEPT_W) -> Pt();
+
+}

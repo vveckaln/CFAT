@@ -67,10 +67,16 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
 			  //			  printf("%f\n", angle_right_norm);
 			  //			  printf("angle right %f left %f right + left %f DefAngle %f\n", plane -> angle_right(particle_v3), plane -> angle_left(particle_v3),  plane -> angle_right(particle_v3) + plane -> angle_left(particle_v3), plane -> DefAngle());
 	      
-			  const TString prefix = TString("chi_") + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_] + "_" + tag_particles_types_[particle_code];
+			  const TString prefix_PA_N = TString("chi_") + tag_PA_plots_types_[PA_N] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_particles_types_[particle_code];
+			  const TString prefix_PA_E = TString("chi_") + tag_PA_plots_types_[PA_E] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_particles_types_[particle_code];
+			  const TString prefix_PA_PT = TString("chi_") + tag_PA_plots_types_[PA_PT] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_particles_types_[particle_code];
+
 			  if (particle_code == ALLPRT)
 			    {
-			      Fill1D(prefix, angle_right_norm + plane_index);
+			      Fill1D(prefix_PA_N, angle_right_norm + plane_index);
+			      Fill1D(prefix_PA_E, angle_right_norm + plane_index, it -> GetLorentzVector().E()/GetEvent() -> GetEventEnergy());
+			      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetEventPt());
+
 			    }
 			  else
 			    {
@@ -79,16 +85,30 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
 				{
 				case 0:
 				  if (it.GetIterCore() -> GetVectorCode() == HAD_B or it.GetIterCore() -> GetVectorCode() == q_closer_index)
-				    Fill1D(prefix, angle_right_norm + plane_index);
+				    {
+				      Fill1D(prefix_PA_N, angle_right_norm + plane_index);
+				      Fill1D(prefix_PA_E, angle_right_norm + plane_index, it -> GetLorentzVector().E()/GetEvent() -> GetEventEnergy());
+				      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetEventPt());
+				    }
 				  break;
 				case 1:
 				  if (it.GetIterCore() -> GetVectorCode() == q_closer_index or it.GetIterCore() -> GetVectorCode() == q_further_index)
-				    Fill1D(prefix, angle_right_norm + plane_index);
+				    {
+				      Fill1D(prefix_PA_N, angle_right_norm + plane_index);
+				      Fill1D(prefix_PA_E, angle_right_norm + plane_index, it -> GetLorentzVector().E()/GetEvent() -> GetEventEnergy());
+				      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetEventPt());
+
+				    }
 				  break;
 				
 				case 2:
 				  if (it.GetIterCore() -> GetVectorCode() == HAD_B or it.GetIterCore() -> GetVectorCode() == q_further_index)
-				    Fill1D(prefix, angle_right_norm + plane_index);
+				    {
+				      Fill1D(prefix_PA_N, angle_right_norm + plane_index);
+				      Fill1D(prefix_PA_E, angle_right_norm + plane_index, it -> GetLorentzVector().E()/GetEvent() -> GetEventEnergy());
+				      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetEventPt());
+
+				    }
 				  break;
 				} 
 			    }

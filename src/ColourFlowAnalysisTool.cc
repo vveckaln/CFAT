@@ -26,7 +26,7 @@ void ColourFlowAnalysisTool::Work()
 	    {
 	      const PullVector pull_vector = GetEvent() -> GetCore() -> CalculatePullVector(jet1_code, charge_code);
 	      const TString suffix =  TString("_") + tag_charge_types_[charge_code] + "_" + 
-		tag_levels_[work_mode_] + "_" + 
+		tag_levels_types_[work_mode_] + "_" + 
 		tag_jet_types_[jet1_code];
 	      //	      printf("Pull vector %s pv eta %.9f phi%f mod %.9f\n", suffix.Data(), pull_vector.eta_component, pull_vector.phi_component, pull_vector.Mod());
 
@@ -56,7 +56,7 @@ void ColourFlowAnalysisTool::Work()
 		  try
 		    {
 		      const TString infix = TString("_") + tag_charge_types_[charge_code] + "_" + 
-			tag_levels_[work_mode_] + "_" + 
+			tag_levels_types_[work_mode_] + "_" + 
 			tag_jet_types_[jet1_code] + "_" + 
 			tag_jet_types_[jet2_code] + "_"; 
 		      const double pull_angle = GetEvent() -> PullAngle(pull_vector, jet2_code);
@@ -120,7 +120,7 @@ void ColourFlowAnalysisTool::Work()
 	      const PullVector pull_vector = GetEvent() -> GetCore() -> CalculatePullVector(jet1_code, ALLCOMP, pf_ptcut_code);
 	      
 	      const TString suffix =  TString("_") + PF_Pt_cuts_types_[pf_ptcut_code] + "_" + 
-		tag_levels_[work_mode_] + "_" + 
+		tag_levels_types_[work_mode_] + "_" + 
 		tag_jet_types_[jet1_code]; 
 	      
 	      if (fabs(pull_vector.phi_component) > 0.015 or fabs(pull_vector.eta_component) > 0.015)
@@ -152,7 +152,7 @@ void ColourFlowAnalysisTool::Work()
 		      
 		      const double cos_pull_angle = TMath::Cos(pull_angle);
 		      const TString infix = TString("_") + PF_Pt_cuts_types_[pf_ptcut_code] + "_" + 
-			tag_levels_[work_mode_] + "_" + 
+			tag_levels_types_[work_mode_] + "_" + 
 			tag_jet_types_[jet1_code] + "_" + 
 			tag_jet_types_[jet2_code] + "_"; 
 		      if (fabs(pull_vector.phi_component) < 0.015 and fabs(pull_vector.eta_component) < 0.015)
@@ -186,7 +186,7 @@ void ColourFlowAnalysisTool::Work()
       //const char * tags[3] = {PF_N_cuts_tag, HadW_Pt_cuts_tag, PVMag_cuts_tag};
 	      {
 		const TString suffix =  TString("_") + PF_N_cuts_tag + "_" + 
-		  tag_levels_[work_mode_] + "_" + 
+		  tag_levels_types_[work_mode_] + "_" + 
 		  tag_jet_types_[jet1_code];
 	      
 		if (fabs(pull_vector.phi_component) > 0.015 or fabs(pull_vector.eta_component) > 0.015)
@@ -209,7 +209,7 @@ void ColourFlowAnalysisTool::Work()
 
 	      
 		  const TString suffix =  TString("_") + HadW_Pt_cuts_tag + "_" + 
-		    tag_levels_[work_mode_] + "_" + 
+		    tag_levels_types_[work_mode_] + "_" + 
 		    tag_jet_types_[jet1_code];
 	      
 		  if (fabs(pull_vector.phi_component) > 0.015 or fabs(pull_vector.eta_component) > 0.015)
@@ -243,7 +243,7 @@ void ColourFlowAnalysisTool::Work()
 		      const double cos_pull_angle = TMath::Cos(pull_angle);
 		      {
 			const TString infix = TString("_") + PF_N_cuts_tag + "_" + 
-			  tag_levels_[work_mode_] + "_" + 
+			  tag_levels_types_[work_mode_] + "_" + 
 			  tag_jet_types_[jet1_code] + "_" + 
 			  tag_jet_types_[jet2_code] + "_";
 			if (fabs(pull_vector.phi_component) < 0.015 and fabs(pull_vector.eta_component) < 0.015)
@@ -257,7 +257,7 @@ void ColourFlowAnalysisTool::Work()
 		      if (GetEvent() -> GetVector(HAD_W))
 			{
 			  const TString infix = TString("_") + HadW_Pt_cuts_tag + "_" + 
-			    tag_levels_[work_mode_] + "_" + 
+			    tag_levels_types_[work_mode_] + "_" + 
 			    tag_jet_types_[jet1_code] + "_" + 
 			    tag_jet_types_[jet2_code] + "_"; 
 			  if (fabs(pull_vector.phi_component) < 0.015 and fabs(pull_vector.eta_component) < 0.015)
@@ -271,7 +271,7 @@ void ColourFlowAnalysisTool::Work()
 
 		      {
 			const TString infix = TString("_") + PVMag_cuts_tag + "_" + 
-			  tag_levels_[work_mode_] + "_" + 
+			  tag_levels_types_[work_mode_] + "_" + 
 			  tag_jet_types_[jet1_code] + "_" + 
 			  tag_jet_types_[jet2_code] + "_"; 
 			if (fabs(pull_vector.phi_component) < 0.015 and fabs(pull_vector.eta_component) < 0.015)
@@ -338,7 +338,7 @@ void ColourFlowAnalysisTool::PlotAngleBetweenJets() const
           
 	  const TString infix = TString(tag_jet_types_[jet1_code]) + "_" + 
 	    tag_jet_types_[jet2_code] + "_" + 
-	    tag_levels_[work_mode_] + "_"; 
+	    tag_levels_types_[work_mode_] + "_"; 
 	  const TString hash_key1_angle = TString("angle_") + 
 	    infix +
 	    tag_DeltaR_types_[DeltaR_index];
@@ -398,7 +398,7 @@ void ColourFlowAnalysisTool::PlotJetDimensions() const
       
       if (not jet)
 	continue;
-      const TString sufix = TString(tag_levels_[work_mode_]) + "_" +
+      const TString sufix = TString(tag_levels_types_[work_mode_]) + "_" +
 	tag_jet_types_[jet_code];
       //printf("test %s %s \n", (TString("jet_phi_") +  sufix).Data(), (TString("jet_rapidity_") +  sufix).Data()); 
       if (jet == CFAT_Event::beam_ptr_)
@@ -420,7 +420,7 @@ void ColourFlowAnalysisTool::PlotJetDimensions() const
     }
 }
 
-void ColourFlowAnalysisTool::Fill1D(const TString &, double) const
+void ColourFlowAnalysisTool::Fill1D(const TString &, double, double ) const
 {
 }
 

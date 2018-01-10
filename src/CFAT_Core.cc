@@ -148,7 +148,7 @@ void CFAT_Core::AnalyseJetConstituents()
   float Echarged[4]; float Eall[4];
   for (unsigned char charge_code = 0; charge_code < N_charge_types_; charge_code ++)
     {
-      const TString hist_title_Eventenergy = TString("JetConst_EventE_") + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_];
+      const TString hist_title_Eventenergy = TString("JetConst_EventE_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_];
       float energy_leading_jet = 0.0;
       float energy_2nd_leading_jet = 0.0;
 	   
@@ -163,15 +163,15 @@ void CFAT_Core::AnalyseJetConstituents()
 	  float Totalpy = 0.0;
 	  float Totalpz = 0.0;
 	  unsigned int N = 0;
-	  const TString hist_title_energy      = TString("JetConst_E_")       + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
-	  const TString hist_title_Totalenergy = TString("JetConst_TotalE_")  + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
-	  const TString hist_title_Totalpx     = TString("JetConst_TotalPx_") + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
-	  const TString hist_title_Totalpy     = TString("JetConst_TotalPy_") + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
-	  const TString hist_title_Totalpz     = TString("JetConst_TotalPz_") + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
+	  const TString hist_title_energy      = TString("JetConst_E_")       + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
+	  const TString hist_title_Totalenergy = TString("JetConst_TotalE_")  + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
+	  const TString hist_title_Totalpx     = TString("JetConst_TotalPx_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
+	  const TString hist_title_Totalpy     = TString("JetConst_TotalPy_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
+	  const TString hist_title_Totalpz     = TString("JetConst_TotalPz_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
 
-	  const TString hist_title_pt          = TString("JetConst_Pt_")      + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
-	  const TString hist_title_m           = TString("JetConst_M_")       + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
-	  const TString hist_title_N           = TString("JetConst_N_")       + tag_charge_types_[charge_code] + "_" + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
+	  const TString hist_title_pt          = TString("JetConst_Pt_")      + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
+	  const TString hist_title_m           = TString("JetConst_M_")       + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
+	  const TString hist_title_N           = TString("JetConst_N_")       + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
 
 	  for(pf_iter it = begin(vector_code); it != end(vector_code); it ++)
 	    {
@@ -220,8 +220,8 @@ void CFAT_Core::AnalyseJetConstituents()
     for (VectorCode_t jet_index = 0; jet_index < 4; jet_index ++)
     {
       const unsigned char vector_code = jets[jet_index];
-      const TString hist_title_EventChargedContentN = TString("JetConst_EventChargedContentN_") + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
-      const TString hist_title_EventChargedContentE = TString("JetConst_EventChargedContentE_") + tag_levels_[work_mode_] + "_" + tag_jet_types_[vector_code];
+      const TString hist_title_EventChargedContentN = TString("JetConst_EventChargedContentN_") + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
+      const TString hist_title_EventChargedContentE = TString("JetConst_EventChargedContentE_") + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
       cfat -> Fill1D(hist_title_EventChargedContentN, Ncharged[jet_index]/Nall[jet_index]);
       cfat -> Fill1D(hist_title_EventChargedContentE, Echarged[jet_index]/Eall[jet_index]);
     }

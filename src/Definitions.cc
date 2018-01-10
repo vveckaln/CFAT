@@ -29,8 +29,20 @@ const char          * Definitions::PVMag_cuts_types_[N_PVMag_cuts_]            =
 const char            Definitions::N_particles_types_                          = 2;
 const char          * Definitions::tag_particles_types_[N_particles_types_]    = {"allpart", "jetprt"};
 
+const char            Definitions::N_PA_plots_types_                           = 3;
+const char          * Definitions::tag_PA_plots_types_[]                       = {"N", "E", "Pt"};
+
 const char            Definitions::N_channels_types_                           = 3;
-const char          * Definitions::channels_types_[N_channels_types_]          = {"L", "E", "M"};
+const char          * Definitions::tag_channels_types_[N_channels_types_]      = {"L", "E", "M"};
+
+const char          * Definitions::jet_titles_[]                               = {"1st leading jet", "2nd leading jet", "hadronic $b$", "hadronic $W$", "hadronic $t$", "$\\ell$", "$\\nu$", "leptonic $b$", "leptonic $W$", "leptonic $t$", "beam"};
+const char          * Definitions::charge_titles_[]                            = {"all", "charged"};
+const char          * Definitions::level_titles_[]                             = {"reconstruction", "generation"};
+const char          * Definitions::channel_titles_[]                           = {"common lepton", "$e$", "$\\mu$"};
+
+unsigned short        Definitions::N_sources_types_                            = 2;
+const char          * Definitions::tag_sources_types_[]                        = {"MC", "data"};
+const char          * Definitions::title_sources_types_[]                      = {"MC", "data"};
 
 void Do(TH1F h)
 {

@@ -15,10 +15,10 @@ class CFAT_Core
   friend class ColourFlowAnalysisTool;
 protected:
   virtual const TLorentzVector *& GetVectorRef(VectorCode_t code) = 0; 
-  unsigned char event_display_mode_;
-  WorkCode_t work_mode_;
-  const void     * event_ptr_;
-  CFAT_Event * cfat_event_;
+  unsigned char      event_display_mode_;
+  WorkCode_t         work_mode_;
+  const void       * event_ptr_;
+  CFAT_Event       * cfat_event_;
 
   class pf_iter_core;
   class pf_iter

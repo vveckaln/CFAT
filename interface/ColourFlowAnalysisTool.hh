@@ -31,7 +31,7 @@ public:
   ChannelCode_t GetChannel() const;
   WorkCode_t  GetWorkMode() const;
   void Work();
-  inline virtual void Fill1D(const TString &, double) const;
+  inline virtual void Fill1D(const TString &, double, double = 1.0) const;
   inline virtual void Fill2D(const TString &, double, double, double weight) const;
   //void (*Fill1D_ptr_)(const TString &, const double) const;
   void PlotAngleBetweenJets() const;
@@ -41,6 +41,7 @@ public:
   void virtual ResetMigrationValues();
   void virtual StoreMigrationValues(double);
   void virtual PlotMigrationValues();
+
   virtual ~ColourFlowAnalysisTool();
 };
 

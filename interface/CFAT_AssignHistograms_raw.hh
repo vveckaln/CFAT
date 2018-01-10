@@ -52,7 +52,7 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 		    continue;
 		  for (unsigned char DeltaR_index = 0; DeltaR_index < N_DeltaR_types_; DeltaR_index ++)
 		    {
-		      const TString postfix = TString("_") + tag_levels_[level_code] + "_" +
+		      const TString postfix = TString("_") + tag_levels_types_[level_code] + "_" +
 			    tag_jet_types_[jet1_code] + "_" + 
 			    tag_jet_types_[jet2_code] + "_" + 
 			    tag_DeltaR_types_[DeltaR_index];
@@ -124,7 +124,7 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 	  for (VectorCode_t jet1_index = 0; jet1_index < 2; jet1_index ++)
 	    {
 	      const TString postfix = TString("_") + 
-		    tag_levels_[level_index] + "_" +
+		    tag_levels_types_[level_index] + "_" +
 		    tag_jet_types_[jet1_index];
 	      for (unsigned char charge_index = 0; charge_index < 2; charge_index ++)
 		{
@@ -241,9 +241,11 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 	{
 	  for (unsigned char particle_index = 0; particle_index < N_particles_types_; particle_index ++)
 	    {
-	      const TString hash_key = TString("chi_") + tag_charge_types_[charge_code] + "_" + tag_levels_[level_code] + "_" + tag_particles_types_[particle_index];
-	      CreateHistogram1DT(target, hash_key, "; #chi; Events", 75, -0.1, 3.1);
-	      
+	      for (unsigned char PA_plots_type_ind = 0; PA_plots_type_ind < N_PA_plots_types_; PA_plots_type_ind ++)
+		{
+		  const TString hash_key = TString("chi_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_particles_types_[particle_index];
+		  CreateHistogram1DT(target, hash_key, "; #chi; Events", 75, -0.1, 3.1);
+		}
 	    }
 	}
     }
@@ -361,7 +363,7 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
     { 
       for (VectorCode_t jet1_code = 0; jet1_code < CFAT_Event::N_jet_types_; jet1_code ++)
 	{
-	  const TString postfix = TString("_") + tag_levels_[level_code] + "_" + tag_jet_types_[jet1_code]; 
+	  const TString postfix = TString("_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[jet1_code]; 
 	    
 	  /*{
 	    const TString hash_key = TString("jet_phi") + postfix;

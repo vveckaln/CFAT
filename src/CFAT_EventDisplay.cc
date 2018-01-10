@@ -46,7 +46,7 @@ void CFAT_Core::EventDisplay(const PullVector & pv, float pull_angle/*, const TV
   char dir_name[128];
   sprintf(dir_name, "event_displays/event_%lu_%s_%s_DeltaR_%f_pull_angle_%f", 
 	  GetCFATEvent() -> GetEventNumber(), 
-	  tag_levels_[work_mode_], 
+	  tag_levels_types_[work_mode_], 
 	  tag_charge_types_[charge_code], 
 	  DeltaR, 
 	  pull_angle);
@@ -57,7 +57,7 @@ void CFAT_Core::EventDisplay(const PullVector & pv, float pull_angle/*, const TV
       sprintf(name, "event_display_%s_event_%lu_%s_%s_#DeltaR_%f_pull_angle_%f", 
 	      histogram_name[hist_ind], 
 	      GetCFATEvent() -> GetEventNumber(), 
-	      tag_levels_[work_mode_], 
+	      tag_levels_types_[work_mode_], 
 	      tag_charge_types_[charge_code],
 	      DeltaR, 
 	      pull_angle);
@@ -145,7 +145,7 @@ void CFAT_Core::EventDisplay(const PullVector & pv, float pull_angle/*, const TV
       char name[128];
       sprintf(name, "%s/%s_%s_%s_%lu_DeltaR_%f_pull_angle_%f", 
 	      dir_name, 
-	      tag_levels_[work_mode_], 
+	      tag_levels_types_[work_mode_], 
 	      tag_charge_types_[charge_code], 
 	      histogram_name[ind], 
 	      GetCFATEvent() -> GetEventNumber(), 
