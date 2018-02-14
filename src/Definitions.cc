@@ -40,9 +40,14 @@ const char          * Definitions::charge_titles_[]                            =
 const char          * Definitions::level_titles_[]                             = {"reconstruction", "generation"};
 const char          * Definitions::channel_titles_[]                           = {"common lepton", "$e$", "$\\mu$"};
 
-unsigned short        Definitions::N_sources_types_                            = 2;
+const unsigned char   Definitions::N_sources_types_                            = 2;
 const char          * Definitions::tag_sources_types_[]                        = {"MC", "data"};
 const char          * Definitions::title_sources_types_[]                      = {"MC", "data"};
+
+const unsigned char   Definitions::N_selection_stages_                         = 4;
+const char          * Definitions::tag_selection_stages_[]                     = {"L1", "L1JGT4", "L1JGT42B", "L1J4B2LJ2"};
+const char          * Definitions::title_selection_stages_[]                   = {"1l", "1l + #geq4j", "1l + #geq4j(2b)", "1l + 4j(2b, 2j)"};
+
 
 void Do(TH1F h)
 {

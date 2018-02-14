@@ -17,6 +17,7 @@ namespace Definitions
   enum Channel_t        {L, E, M};
   enum PA_plots_t       {PA_N, PA_E, PA_PT};
   enum Sources_t        {MC, DATA};
+  enum SelectionStages_t{L1, L1JGT4, L1JGT42B, L1J4B2LJ2};
   typedef unsigned char VectorCode_t;
   typedef unsigned char ChannelCode_t;
   typedef unsigned char sourceCode_t;
@@ -58,9 +59,13 @@ namespace Definitions
   extern const char          * level_titles_[];
   extern const char          * channel_titles_[];
 
-  extern unsigned short        N_sources_types_;
+  extern const unsigned char   N_sources_types_;
   extern const char          * tag_sources_types_[];
   extern const char          * title_sources_types_[];
+
+  extern const unsigned char   N_selection_stages_;
+  extern const char          * tag_selection_stages_[];
+  extern const char          * title_selection_stages_[];
 
 };
 void Do(TH1F);
