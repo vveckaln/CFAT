@@ -45,7 +45,7 @@ const char          * Definitions::tag_sources_types_[]                        =
 const char          * Definitions::title_sources_types_[]                      = {"MC", "data"};
 
 const unsigned char   Definitions::N_selection_stages_                         = 4;
-const char          * Definitions::tag_selection_stages_[]                     = {"L1", "L1JGT4", "L1JGT4B2", "L1J4B2LJ2"};
+const char          * Definitions::tag_selection_stages_[]                     = {"L1", "L1JGEQ4", "L1JGEQ4B2", "L1J4B2LJ2"};
 const char          * Definitions::title_selection_stages_[]                   = {"1l", "1l + #geq4j", "1l + #geq4j(2b)", "1l + 4j(2b, 2j)"};
 
 

@@ -38,7 +38,6 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
   const Plane plane_hadb_qcloser(had_b_jet_v3, *q_closer );
   const Plane plane_qfurther_hadb(*q_further, had_b_jet_v3);
   const Plane * planes[Nplanes] = {&plane_hadb_qcloser, &plane_q1q2, & plane_qfurther_hadb};
-
   for (unsigned char particle_code = 0; particle_code < N_particles_types_; particle_code ++)
     {
       for (unsigned char plane_index = 0; plane_index < Nplanes; plane_index ++)
@@ -75,7 +74,9 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
 			    {
 			      Fill1D(prefix_PA_N, angle_right_norm + plane_index);
 			      Fill1D(prefix_PA_E, angle_right_norm + plane_index, it -> GetLorentzVector().E()/GetEvent() -> GetEventEnergy());
-			      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetEventPt());
+			      //  printf("particle_code %u trackedvectorcode %u\n", particle_code, it.GetTrackedVectorCode());
+			     
+			      //			      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetVectorRef(it.GetIterCore() -> GetVectorCode()) -> Pt());
 
 			    }
 			  else
@@ -88,7 +89,7 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
 				    {
 				      Fill1D(prefix_PA_N, angle_right_norm + plane_index);
 				      Fill1D(prefix_PA_E, angle_right_norm + plane_index, it -> GetLorentzVector().E()/GetEvent() -> GetEventEnergy());
-				      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetEventPt());
+				      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetVectorRef(it.GetIterCore() -> GetVectorCode()) -> Pt());
 				    }
 				  break;
 				case 1:
@@ -96,7 +97,7 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
 				    {
 				      Fill1D(prefix_PA_N, angle_right_norm + plane_index);
 				      Fill1D(prefix_PA_E, angle_right_norm + plane_index, it -> GetLorentzVector().E()/GetEvent() -> GetEventEnergy());
-				      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetEventPt());
+				      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetVectorRef(it.GetIterCore() -> GetVectorCode()) -> Pt());
 
 				    }
 				  break;
@@ -106,7 +107,7 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
 				    {
 				      Fill1D(prefix_PA_N, angle_right_norm + plane_index);
 				      Fill1D(prefix_PA_E, angle_right_norm + plane_index, it -> GetLorentzVector().E()/GetEvent() -> GetEventEnergy());
-				      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetEventPt());
+				      Fill1D(prefix_PA_PT, angle_right_norm + plane_index, it -> GetLorentzVector().Pt()/GetEvent() -> GetVectorRef(it.GetIterCore() -> GetVectorCode()) -> Pt());
 
 				    }
 				  break;
