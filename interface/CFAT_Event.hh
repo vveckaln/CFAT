@@ -9,9 +9,6 @@
 using namespace std;
 using namespace Definitions;
   
-typedef unsigned char ChargeCode_t;
-typedef unsigned char WorkCode_t;
-typedef unsigned char PF_PTCutCode_t;
 
 class ColourFlowAnalysisTool;
 class CFAT_Core;
@@ -49,18 +46,15 @@ public:
   CFAT_Core *                      GetCore();
   ColourFlowAnalysisTool *         GetCFAT();
 
-  double                           weight_;
-
-  static const unsigned char       N_charge_types_ = 2;
-  static const unsigned char       N_jet_types_ = 12;  
-  
+  vector<double>                   weights_;
   CFAT_Event();
   void                             AddLightJets(const vector<TLorentzVector> &, const vector<unsigned short> &);
   void                             AddBJets(const vector<TLorentzVector> &, const vector<unsigned short> &);
   void                             CompleteVectors();
   TLorentzVector                   GetChargedJet(VectorCode_t) const;
   void                             SetCore(CFAT_Core &);
-  void                             SetWeight(double);
+  void                             SetWeights(vector<double>);
+  vector<double>                   GetWeights() const;
   void                             SetEventNumber(unsigned long);
   void                             AddVector(VectorCode_t, const TLorentzVector *);
   const TLorentzVector * const     GetVector(VectorCode_t) const;

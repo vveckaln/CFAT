@@ -14,40 +14,42 @@ ColourFlowAnalysisTool::ColourFlowAnalysisTool()
 
 void ColourFlowAnalysisTool::Work()
 {
-  //PlotAngleBetweenJets();
+  PlotAngleBetweenJets();
   PlotJetDimensions();
   AnalyseParticleFlow();
-  
-  for (VectorCode_t jet1_code = 0; jet1_code < 2; jet1_code ++)
+  for (VectorCode_t jet1_code = 0; jet1_code < 4; jet1_code ++)
     {
+      if (not GetEvent() -> GetVector(jet1_code))
+	continue;
       for (ChargeCode_t charge_code = 0; charge_code < 2; charge_code ++)
 	{
 	  try
 	    {
-	      const PullVector pull_vector = GetEvent() -> GetCore() -> CalculatePullVector(jet1_code, charge_code);
+	      const PullVector pull_vector = GetEvent() -> GetCore() -> CalculatePullVector(jet1_code, charge_code, PF_PT_GT_1p0_GEV);
 	      const TString suffix =  TString("_") + tag_charge_types_[charge_code] + "_" + 
 		tag_levels_types_[work_mode_] + "_" + 
 		tag_jet_types_[jet1_code];
 	      //	      printf("Pull vector %s pv eta %.9f phi%f mod %.9f\n", suffix.Data(), pull_vector.eta_component, pull_vector.phi_component, pull_vector.Mod());
+	      if (fabs(pull_vector.phi_component) < 0.02 and fabs(pull_vector.eta_component) < 0.02)
+		{
 
-	      if (fabs(pull_vector.phi_component) > 0.02 or fabs(pull_vector.eta_component) > 0.02)
+		}
+	      else
 		{
 		  Fill1D(TString("phi_PV_bckg") + suffix, pull_vector.phi_component);
 		  Fill1D(TString("eta_PV_bckg") + suffix, pull_vector.eta_component);
 		  Fill1D(TString("mag_PV_bckg") + suffix, pull_vector.Mod());
-	     	}
-	      else
-		{
-		  Fill1D(TString("phi_PV") + suffix, pull_vector.phi_component);
-		  Fill1D(TString("eta_PV") + suffix, pull_vector.eta_component);
-		  Fill1D(TString("mag_PV") + suffix, pull_vector.Mod());
-		  
 		}
-	      for (VectorCode_t jet2_code = 0; jet2_code < CFAT_Event::N_jet_types_; jet2_code ++)
+	      for (VectorCode_t jet2_code = 0; jet2_code < N_jet_types_; jet2_code ++)
 		{
 		  const TLorentzVector * jet2 = GetEvent() -> GetVector(jet2_code);
 		  if (jet2_code == jet1_code)
 		    continue;
+		  if((jet1_code == LEADING_B or jet1_code == SCND_LEADING_B) and (jet2_code != LEADING_B and jet2_code != SCND_LEADING_B) 
+		     or (jet2_code == LEADING_B or jet2_code == SCND_LEADING_B) and (jet1_code != LEADING_B and jet1_code != SCND_LEADING_B))
+		    {
+		      continue;
+		    }
 		  if (not jet2)
 		    continue;
 		  const double DeltaR = GetEvent() -> DeltaR(jet1_code, jet2_code);
@@ -60,56 +62,50 @@ void ColourFlowAnalysisTool::Work()
 			tag_jet_types_[jet1_code] + "_" + 
 			tag_jet_types_[jet2_code] + "_"; 
 		      const double pull_angle = GetEvent() -> PullAngle(pull_vector, jet2_code);
-		      if (jet1_code == LEADING_JET and (jet2_code == SCND_LEADING_JET or jet2_code == LEPTON) and charge_code == ALLCOMP)
-			{
-			  if (GetEvent() -> GetVector(HAD_W) -> M() < 90.0 and GetEvent() -> GetVector(HAD_W) -> M() > 70.0 and GetEvent() -> GetVector(LEADING_JET) -> DeltaR(*GetEvent() -> GetVector(SCND_LEADING_JET)) > 0.8 /*and fabs(pull_vectorEXP.phi_component) < fabs(pull_vectorEXP.eta_component)*/)
-			    {
-			      //			      const PullVector pull_vectorEXP = GetEvent() -> GetCore() -> CalculatePullVectorEXP(jet1_code, jet2_code, charge_code);
-
-			      //const double pull_angleEXP = GetEvent() -> PullAngleEXP(pull_vectorEXP, jet2_code);
-			      //printf("pull angle %f pull angle EXP %f pv phi %f pv eta %f\n", pull_angle, pull_angleEXP, pull_vectorEXP.phi_component, pull_vectorEXP.eta_component); 
-			      //			      Fill1D(TString("pull_angle")     + infix + tag_DeltaR_types_[DELTAR_TOTAL] + "_EXP", pull_angleEXP);
-			  
-			      //getchar();
-			    }
-			}
-		      
 		      if (jet1_code == LEADING_JET and jet2_code == SCND_LEADING_JET and charge_code == ALLCOMP)
 			{
 			  GetEvent() -> GetCore() -> EventDisplay(pull_vector, pull_angle);
-			 
+			  //			  printf("pull_angle %f\n", pull_angle);
 			}
 		      const double cos_pull_angle = TMath::Cos(pull_angle);
 		     
-		      if (fabs(pull_vector.phi_component) < 0.015 and fabs(pull_vector.eta_component) < 0.015)
+		      if (fabs(pull_vector.phi_component) < 0.02 and fabs(pull_vector.eta_component) < 0.02)
 			{
 			  Fill1D(TString("pull_angle")     + infix + DeltaR_tag, pull_angle);
 			  //Fill1D(TString("cos_pull_angle") + infix + DeltaR_tag       + "_" + tag_channel_, cos_pull_angle);
 			  Fill1D(TString("pull_angle")     + infix + tag_DeltaR_types_[DELTAR_TOTAL], pull_angle);
 			  //Fill1D(TString("cos_pull_angle") + infix + tag_DeltaR_types_[DELTAR_TOTAL] + "_" + tag_channel_, cos_pull_angle);
-			  if (jet1_code == LEADING_JET and jet2_code == SCND_LEADING_JET and charge_code == ALLCOMP)
+
+			  if (jet1_code == LEADING_JET      and jet2_code == SCND_LEADING_JET or 
+			      jet1_code == SCND_LEADING_JET and jet2_code == LEADING_JET or
+			      jet1_code == LEADING_B        and jet2_code == SCND_LEADING_B or
+			      jet1_code == SCND_LEADING_B   and jet2_code == LEADING_B)
 			    {
-			      StoreMigrationValues(pull_angle);
+			      Fill1D(TString("phi_PV") + suffix, pull_vector.phi_component);
+			      Fill1D(TString("eta_PV") + suffix, pull_vector.eta_component);
+			      Fill1D(TString("mag_PV") + suffix, pull_vector.Mod());
+			      if (DeltaR > 1.0)
+				StoreMigrationValues(charge_code, jet1_code, pull_angle, pull_vector.Mod());
 			    }
  			  
 			}
 		      /*		      if (jet1_code == LEADING_JET and jet2_code == SCND_LEADING_JET and charge_code == ALLCOMP)
-			{
-			  StoreMigrationValues(pull_angle);
-			}
+					      {
+					      StoreMigrationValues(pull_angle);
+					      }
 		      */
 		      
 		    }
 		  catch (const char * e)
 		    {
-		      printf("Exception I: %s\n", e);
+		      //		      printf("Exception I: %s\n", e);
 		    }
 		}
 	    }
 	  catch(const char *e)
 	    {
 
-	      printf("Exception II%s\n", e);
+	      //printf("Exception II%s\n", e);
 	    }
 	}
       //      continue;
@@ -136,11 +132,16 @@ void ColourFlowAnalysisTool::Work()
 		  Fill1D(TString("mag_PV") + suffix, pull_vector.Mod());
 		  
 		}
-	      for (VectorCode_t jet2_code = 0; jet2_code < CFAT_Event::N_jet_types_; jet2_code ++)
+	      for (VectorCode_t jet2_code = 0; jet2_code < N_jet_types_; jet2_code ++)
 		{
-		  const TLorentzVector * jet2 = GetEvent() -> GetVector(jet2_code);
 		  if (jet2_code == jet1_code)
 		    continue;
+		  if((jet1_code == LEADING_B or jet1_code == SCND_LEADING_B) and (jet2_code != LEADING_B and jet2_code != SCND_LEADING_B) 
+		     or (jet2_code == LEADING_B or jet2_code == SCND_LEADING_B) and (jet1_code != LEADING_B and jet1_code != SCND_LEADING_B))
+		    {
+		      continue;
+		    }
+		  const TLorentzVector * jet2 = GetEvent() -> GetVector(jet2_code);
 		  if (not jet2)
 		    continue;
 		  const double DeltaR = GetEvent() -> DeltaR(jet1_code, jet2_code);
@@ -165,14 +166,14 @@ void ColourFlowAnalysisTool::Work()
 		    }
 		  catch (const char * e)
 		    {
-		      printf("Exception III %s\n", e);
+		      //      printf("Exception III %s\n", e);
 		    }
 		}
 	    }
 	  catch(const char *e)
 	    {
 
-	      printf("Exception IV %s\n", e);
+	      //  printf("Exception IV %s\n", e);
 	    }
 	}
 
@@ -226,12 +227,17 @@ void ColourFlowAnalysisTool::Work()
 		  
 		    }
 		}
-	      for (VectorCode_t jet2_code = 0; jet2_code < CFAT_Event::N_jet_types_; jet2_code ++)
+	      for (VectorCode_t jet2_code = 0; jet2_code < N_jet_types_; jet2_code ++)
 		{
-		  const TLorentzVector * jet2 = GetEvent() -> GetVector(jet2_code);
-		  
 		  if (jet2_code == jet1_code)
 		    continue;
+		  if((jet1_code == LEADING_B or jet1_code == SCND_LEADING_B) and (jet2_code != LEADING_B and jet2_code != SCND_LEADING_B) 
+		     or (jet2_code == LEADING_B or jet2_code == SCND_LEADING_B) and (jet1_code != LEADING_B and jet1_code != SCND_LEADING_B))
+		    {
+		      continue;
+		    }
+		  const TLorentzVector * jet2 = GetEvent() -> GetVector(jet2_code);
+		  
 		  if (not jet2)
 		    continue;
 		  const double DeltaR = GetEvent() -> DeltaR(jet1_code, jet2_code);
@@ -286,17 +292,17 @@ void ColourFlowAnalysisTool::Work()
 		    }
 		  catch (const char * e)
 		    {
-		      printf("Exception V %s\n", e);
+		      //      printf("Exception V %s\n", e);
 		    }
 		}
 	    }
 	  catch(const char *e)
 	    {
 
-	      printf("Exception VI %s\n", e);
+	      // printf("Exception VI %s\n", e);
 	    }
     }
-  //GetEvent() -> GetCore() -> AnalyseJetConstituents();
+  GetEvent() -> GetCore() -> AnalyseJetConstituents();
   // AnalyseParticleFlow();
   //PtRadiationProfile();
   
@@ -323,15 +329,19 @@ void ColourFlowAnalysisTool::SetWorkMode(WorkCode_t mode)
 
 void ColourFlowAnalysisTool::PlotAngleBetweenJets() const
 {
-  for (VectorCode_t jet1_code = 0; jet1_code < CFAT_Event::N_jet_types_; jet1_code ++)
+  for (VectorCode_t jet1_code = 0; jet1_code < N_jet_types_; jet1_code ++)
     {
       const TLorentzVector * jet1 = GetEvent() -> GetVector(jet1_code);
       if (not jet1)
 	continue;
-      for (VectorCode_t jet2_code = jet1_code + 1; jet2_code < CFAT_Event::N_jet_types_; jet2_code ++)
+      if (not (jet1_code == BEAM or jet1_code == LEADING_JET or jet1_code == LEPTON))
+	continue;
+      for (VectorCode_t jet2_code = jet1_code + 1; jet2_code < N_jet_types_; jet2_code ++)
 	{
 	  const TLorentzVector * jet2 = GetEvent() -> GetVector(jet2_code);
 	  if (not jet2)
+	    continue;
+	  if (not (jet2_code == BEAM or jet2_code == LEADING_JET or jet2_code == LEPTON))
 	    continue;
 	  const double DeltaR = GetEvent() -> DeltaR(jet1_code, jet2_code);
 	  const unsigned char DeltaR_index = DeltaR < 1.0 ? DELTAR_LE_1p0 : DELTAR_GT_1p0;
@@ -345,12 +355,13 @@ void ColourFlowAnalysisTool::PlotAngleBetweenJets() const
 
 
 	  const double angle = GetEvent() -> Angle(jet1_code, jet2_code);
+	  
 	  Fill1D(hash_key1_angle, angle);
 	  const TString hash_key2_angle = TString("angle_") + 
 	    infix +
 	    tag_DeltaR_types_[DELTAR_TOTAL];
 	  Fill1D(hash_key2_angle, angle);
-          if (jet2 != CFAT_Event::beam_ptr_)
+	  /*          if (jet2 != CFAT_Event::beam_ptr_)
 	    {
 	      const TVector2 jet_difference_phi_eta(TVector2::Phi_mpi_pi(jet2 -> Phi() - jet1 -> Phi()), jet2 -> Rapidity() - jet1 -> Rapidity());
 	      {
@@ -384,7 +395,7 @@ void ColourFlowAnalysisTool::PlotAngleBetweenJets() const
 		Fill1D(hash_key, jet_difference_phi_eta.Py());
 	  					     
 	      }
-	    }
+	      }*/
 
        	}
     }
@@ -392,7 +403,7 @@ void ColourFlowAnalysisTool::PlotAngleBetweenJets() const
 
 void ColourFlowAnalysisTool::PlotJetDimensions() const
 {
-  for (VectorCode_t jet_code = 0; jet_code < CFAT_Event::N_jet_types_; jet_code ++)
+  for (VectorCode_t jet_code = 0; jet_code < N_jet_types_; jet_code ++)
     {
       const TLorentzVector *jet = GetEvent() -> GetVector(jet_code); 
       
@@ -406,29 +417,19 @@ void ColourFlowAnalysisTool::PlotJetDimensions() const
       //  Fill1D(TString("jet_phi_")       + sufix,  jet -> Phi());
       //Fill1D(TString("jet_rapidity_")  + sufix,  jet -> Rapidity());
       //Fill1D(TString("jet_eta_")       + sufix,  jet -> Eta());
-      const double P = sqrt(pow(jet -> Pt(), 2) + pow(jet -> Pz(), 2));
+      //const double P = sqrt(pow(jet -> Pt(), 2) + pow(jet -> Pz(), 2));
       //Fill1D(TString("jet_mass_norm_") + sufix,  jet -> M()/P);
       //Fill1D(TString("jet_pt_norm_")   + sufix,  jet -> Pt()/P);
       //Fill1D(TString("jet_pz_norm_")   + sufix,  jet -> Pz()/P);
       //Fill1D(TString("jet_px_norm_")   + sufix,  jet -> Px()/P);
 
       Fill1D(TString("jet_mass_")      + sufix,  jet -> M());
-      //Fill1D(TString("jet_pt_")        + sufix,  jet -> Pt());
+      Fill1D(TString("jet_pt_")        + sufix,  jet -> Pt());
       //Fill1D(TString("jet_pz_")        + sufix,  jet -> Pz());
       //Fill1D(TString("jet_px_")        + sufix,  jet -> Px());
 
     }
 }
-
-void ColourFlowAnalysisTool::Fill1D(const TString &, double, double ) const
-{
-}
-
-
-void ColourFlowAnalysisTool::Fill2D(const TString &, double, double, double) const
-{
-}
-
 void ColourFlowAnalysisTool::SetChannel(ChannelCode_t code)
 {
   channel_code_ = code;
@@ -477,21 +478,6 @@ void ColourFlowAnalysisTool::PlotPUPPIWeight(unsigned char jet_vector_index, uns
   
 }
 */
-
-
-void ColourFlowAnalysisTool::ResetMigrationValues()
-{
-}
-
-void ColourFlowAnalysisTool::StoreMigrationValues(double )
-{
-
-}
-
-void ColourFlowAnalysisTool::PlotMigrationValues()
-{
-
-}
 
 void ColourFlowAnalysisTool::Do()
 {

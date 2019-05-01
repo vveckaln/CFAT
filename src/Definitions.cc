@@ -6,9 +6,9 @@
 const char            Definitions::N_charge_types_                             = 2;
 const char          * Definitions::tag_charge_types_[2]                        = {"allconst", "chconst"};
 
-const char            Definitions::N_jet_types_                                = 12;
+const char            Definitions::N_jet_types_                                = 14;
 const char          * Definitions::tag_jet_types_[N_jet_types_]    = 
-    {"leading_jet", "2nd_leading_jet", "had_b", "had_w", "had_t", "lepton", "neutrino", "lept_b", "lept_w", "lept_t", "beam", "fake"};
+  {"leading_jet", "scnd_leading_jet", "leading_b", "scnd_leading_b", "had_b", "lept_b", "had_w", "had_t", "lepton", "neutrino",  "lept_w", "lept_t", "beam", "fake"};
 //    0              1                  2         3       4         5        6           7          8        9         10      11         
 
 const unsigned char   Definitions::N_DeltaR_types_                             = 3;
@@ -35,7 +35,7 @@ const char          * Definitions::tag_PA_plots_types_[]                       =
 const char            Definitions::N_channels_types_                           = 3;
 const char          * Definitions::tag_channels_types_[N_channels_types_]      = {"L", "E", "M"};
 
-const char          * Definitions::jet_titles_[]                               = {"1st leading jet", "2nd leading jet", "hadronic $b$", "hadronic $W$", "hadronic $t$", "$\\ell$", "$\\nu$", "leptonic $b$", "leptonic $W$", "leptonic $t$", "beam"};
+const char          * Definitions::jet_titles_[]                               = {"1st leading jet", "2nd leading jet", "leading b", "2nd leading b", "hadronic $b$", "leptonic $b$", "hadronic $W$", "hadronic $t$", "$\\ell$", "$\\nu$", "leptonic $W$", "leptonic $t$", "beam" };
 const char          * Definitions::charge_titles_[]                            = {"all", "charged"};
 const char          * Definitions::level_titles_[]                             = {"reconstruction", "generation"};
 const char          * Definitions::channel_titles_[]                           = {"common lepton", "$e$", "$\\mu$"};
@@ -47,7 +47,6 @@ const char          * Definitions::title_sources_types_[]                      =
 const unsigned char   Definitions::N_selection_stages_                         = 4;
 const char          * Definitions::tag_selection_stages_[]                     = {"L1", "L1JGEQ4", "L1JGEQ4B2", "L1J4B2LJ2"};
 const char          * Definitions::title_selection_stages_[]                   = {"1l", "1l + #geq4j", "1l + #geq4j(2b)", "1l + 4j(2b, 2j)"};
-
 
 void Do(TH1F h)
 {

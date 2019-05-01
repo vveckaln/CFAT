@@ -47,11 +47,13 @@ void CFAT_Core::pf_iter::SetDeleteOption(bool option)
 
 void CFAT_Core::pf_iter::SetTrackedVectorCode(VectorCode_t code)
 {
+  // set code tracked by the iterator
   tracked_vector_code_ = code;
 }
 
 VectorCode_t CFAT_Core::pf_iter::GetTrackedVectorCode() const
 {
+  // return vector code tracked by the iterator, 255 if tracking all jets
   return tracked_vector_code_;
 }
 

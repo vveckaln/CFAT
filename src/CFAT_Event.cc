@@ -27,7 +27,6 @@ CFAT_Event::CFAT_Event()
   
 {
   event_number_                    = 0;
-  weight_                          = 0;
   work_mode_                       = 0;
   had_W_ptr_                       = NULL;
   had_t_ptr_                       = NULL;
@@ -45,9 +44,14 @@ void CFAT_Event::SetCore(CFAT_Core & core)
   core.cfat_event_ = this;
 }
 
-void CFAT_Event::SetWeight(double w)
+void CFAT_Event::SetWeights(vector<double> w)
 {
-  weight_ = w;
+  weights_ = w;
+}
+
+vector<double> CFAT_Event::GetWeights() const
+{
+  return weights_;
 }
 
 void CFAT_Event::SetEventNumber(unsigned long numb)
@@ -187,7 +191,10 @@ double CFAT_Event::DeltaR(VectorCode_t code1, VectorCode_t code2) const
   const TLorentzVector * jet1 = GetVector(code1);
   const TLorentzVector * jet2 = GetVector(code2);
   if (not jet1 or not jet2)
-    throw "CFAT_Event::DeltaR(VectorCode_t, VectorCode_t) : null vectors. Please Check!";
+    {
+      printf("vc1 %u %p vc2 %u %p\n", code1, jet1, code2, jet2);
+      throw "CFAT_Event::DeltaR(VectorCode_t, VectorCode_t) : null vectors. Please Check!";
+    }
   if (jet1 == beam_ptr_)
     {
       if (jet2 == beam_ptr_)
