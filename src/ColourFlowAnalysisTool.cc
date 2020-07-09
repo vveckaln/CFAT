@@ -17,6 +17,7 @@ void ColourFlowAnalysisTool::Work()
   PlotAngleBetweenJets();
   PlotJetDimensions();
   AnalyseParticleFlow();
+  
   for (VectorCode_t jet1_code = 0; jet1_code < 4; jet1_code ++)
     {
       if (not GetEvent() -> GetVector(jet1_code))
@@ -62,6 +63,17 @@ void ColourFlowAnalysisTool::Work()
 			tag_jet_types_[jet1_code] + "_" + 
 			tag_jet_types_[jet2_code] + "_"; 
 		      const double pull_angle = GetEvent() -> PullAngle(pull_vector, jet2_code);
+		      // if (charge_code == CHARGED and jet1_code == LEADING_JET and jet2_code == SCND_LEADING_JET)
+		      // 	{
+		      // 	  GetEvent() -> GetCore() -> ls_particles(LEADING_JET, CHARGED);
+		      // 	  printf("pull vector phi %f eta %f\n", pull_vector.phi_component, pull_vector.eta_component);
+		      // 	  const TLorentzVector leading_jet_particles = GetEvent() -> GetCore() -> GetJetFromParticles(LEADING_JET, CHARGED);
+		      // 	  const TLorentzVector * leading_jet = & leading_jet_particles;GetEvent() -> GetVector(LEADING_JET);
+		      // 	  printf("leading jet E %f Px %f Py %f Pz %f\n", leading_jet -> E(), leading_jet -> Px(), leading_jet -> Py(), leading_jet -> Pz());
+		      // 	  const TLorentzVector * scnd_leading_jet = GetEvent() -> GetVector(SCND_LEADING_JET);
+		      // 	  printf("scnd leading jet E %f Px %f Py %f Pz %f\n", scnd_leading_jet -> E(), scnd_leading_jet -> Px(), scnd_leading_jet -> Py(), scnd_leading_jet -> Pz());
+		      // 	  printf("pull angle %.6f\n", pull_angle);
+		      // 	}
 		      if (jet1_code == LEADING_JET and jet2_code == SCND_LEADING_JET and charge_code == ALLCOMP)
 			{
 			  GetEvent() -> GetCore() -> EventDisplay(pull_vector, pull_angle);
@@ -71,6 +83,12 @@ void ColourFlowAnalysisTool::Work()
 		     
 		      if (fabs(pull_vector.phi_component) < 0.02 and fabs(pull_vector.eta_component) < 0.02)
 			{
+			  if (work_mode_ == 0 and jet1_code == 0 and jet2_code == 1 and charge_code == 0)
+			    {
+			      static unsigned long nfill = 0;
+			      nfill ++;
+			    
+			    }
 			  Fill1D(TString("pull_angle")     + infix + DeltaR_tag, pull_angle);
 			  //Fill1D(TString("cos_pull_angle") + infix + DeltaR_tag       + "_" + tag_channel_, cos_pull_angle);
 			  Fill1D(TString("pull_angle")     + infix + tag_DeltaR_types_[DELTAR_TOTAL], pull_angle);
@@ -108,13 +126,13 @@ void ColourFlowAnalysisTool::Work()
 	      //printf("Exception II%s\n", e);
 	    }
 	}
+
       //      continue;
       for (PF_PTCutCode_t pf_ptcut_code = 1; pf_ptcut_code < 3; pf_ptcut_code ++)
 	{
 	  try
 	    {
 	      const PullVector pull_vector = GetEvent() -> GetCore() -> CalculatePullVector(jet1_code, ALLCOMP, pf_ptcut_code);
-	      
 	      const TString suffix =  TString("_") + PF_Pt_cuts_types_[pf_ptcut_code] + "_" + 
 		tag_levels_types_[work_mode_] + "_" + 
 		tag_jet_types_[jet1_code]; 
@@ -149,6 +167,7 @@ void ColourFlowAnalysisTool::Work()
 		  
 		  try
 		    {
+
 		      const double pull_angle = GetEvent() -> PullAngle(pull_vector, jet2_code);
 		      
 		      const double cos_pull_angle = TMath::Cos(pull_angle);
@@ -181,6 +200,7 @@ void ColourFlowAnalysisTool::Work()
 	  try
 	    {
 	      const PullVector pull_vector = GetEvent() -> GetCore() -> CalculatePullVector(jet1_code);
+
 	      const char * PF_N_cuts_tag = pull_vector.Ncomponents <= 20 ? PF_N_cuts_types_[PFN_LE_20] : PF_N_cuts_types_[PFN_GT_20];
 	      const char * HadW_Pt_cuts_tag = "TBD";
 	      const char * PVMag_cuts_tag = pull_vector.Mod() <= 0.005 ? PVMag_cuts_types_[PVMAG_LE_0p005] :PVMag_cuts_types_[PVMAG_GT_0p005];
@@ -311,6 +331,11 @@ void ColourFlowAnalysisTool::Work()
 CFAT_Event * ColourFlowAnalysisTool::GetEvent() const
 {
   return cfat_event_ptr_;
+}
+
+void ColourFlowAnalysisTool::Reset()
+{
+  GetEvent() -> Reset();
 }
 
 void ColourFlowAnalysisTool::SetEvent(CFAT_Event & event)

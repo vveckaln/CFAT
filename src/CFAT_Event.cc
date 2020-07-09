@@ -28,14 +28,24 @@ CFAT_Event::CFAT_Event()
 {
   event_number_                    = 0;
   work_mode_                       = 0;
-  had_W_ptr_                       = NULL;
-  had_t_ptr_                       = NULL;
+  had_W_ptr_                       = nullptr;
+  had_t_ptr_                       = nullptr;
   
-  lept_W_ptr_                      = NULL;
-  lept_t_ptr_                      = NULL;
-  fake_ptr_                        = NULL;
-  cfat_                            = NULL;
-  core_ptr_                        = NULL;
+  lept_W_ptr_                      = nullptr;
+  lept_t_ptr_                      = nullptr;
+  fake_ptr_                        = nullptr;
+  cfat_                            = nullptr;
+  core_ptr_                        = nullptr;
+}
+
+void CFAT_Event::Reset()
+{
+  had_W_ptr_                       = nullptr;
+  had_t_ptr_                       = nullptr;
+  
+  lept_W_ptr_                      = nullptr;
+  lept_t_ptr_                      = nullptr;
+  GetCore() -> Reset();
 }
 
 void CFAT_Event::SetCore(CFAT_Core & core)
@@ -110,11 +120,32 @@ TLorentzVector & CFAT_Event::GetStoreRef(VectorCode_t code)
 }
 
 
-const TLorentzVector * const CFAT_Event::GetVector(VectorCode_t vector_code) const
+const TLorentzVector * const CFAT_Event::GetVector(VectorCode_t vector_code, const char * particle, ChargeCode_t charge_code) const
 {
-  return (const TLorentzVector * const) const_cast< CFAT_Event * >(this) -> GetVectorRef(vector_code);
+  switch(vector_code)
+    {
+    case HAD_W:
+      return had_W_ptr_;
+    case HAD_T:
+      return had_t_ptr_;
+    case LEPT_W:
+      return lept_W_ptr_;
+    case LEPT_T:
+      return lept_t_ptr_;
+    case BEAM:
+      return beam_ptr_;
+    case FAKE:
+      return fake_ptr_;
+    default:
+      return GetCore() -> GetVector(vector_code, particle, charge_code);
+    }
 } 
 CFAT_Core * CFAT_Event::GetCore()
+{
+  return core_ptr_;
+}
+
+CFAT_Core * CFAT_Event::GetCore() const
 {
   return core_ptr_;
 }
@@ -211,10 +242,10 @@ double CFAT_Event::DeltaR(VectorCode_t code1, VectorCode_t code2) const
     }
 }
 
-double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2) const
+double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2, const char * particle, ChargeCode_t charge_code) const
 {
-  const TLorentzVector * jet1 = GetVector(pv.origin_jet);
-  const TLorentzVector * jet2 = GetVector(code2);
+  const TLorentzVector * jet1 = GetVector(pv.origin_jet, particle, charge_code);
+  const TLorentzVector * jet2 = GetVector(code2, particle, charge_code);
   
   //printf("Calculating pull angle Pt %f Phi %f Rapidity %f \n", jet2 -> Pt(), jet2 -> Phi(), jet2 -> Rapidity());
   if (not jet1 or not jet2)

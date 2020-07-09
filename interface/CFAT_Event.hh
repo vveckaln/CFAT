@@ -43,7 +43,9 @@ class CFAT_Event
   void                             SetWorkMode(WorkCode_t);
   void                             SetVector(VectorCode_t, const TLorentzVector &);
 public:
+  void                             Reset();
   CFAT_Core *                      GetCore();
+  CFAT_Core *                      GetCore() const ;
   ColourFlowAnalysisTool *         GetCFAT();
 
   vector<double>                   weights_;
@@ -57,12 +59,12 @@ public:
   vector<double>                   GetWeights() const;
   void                             SetEventNumber(unsigned long);
   void                             AddVector(VectorCode_t, const TLorentzVector *);
-  const TLorentzVector * const     GetVector(VectorCode_t) const;
+  const TLorentzVector * const     GetVector(VectorCode_t, const char * = 0, ChargeCode_t = ALLCOMP) const;
 
   unsigned short                   GetIndex(VectorCode_t) const;
   double                           Angle(VectorCode_t, VectorCode_t) const;
   double                           DeltaR(VectorCode_t, VectorCode_t) const;
-  double                           PullAngle(const PullVector &, VectorCode_t) const;
+  double                           PullAngle(const PullVector &, VectorCode_t, const char * option = 0, ChargeCode_t = ALLCOMP) const;
   double                           PullAngleEXP(const PullVector &, VectorCode_t) const;
 
   unsigned long                    GetEventNumber() const;

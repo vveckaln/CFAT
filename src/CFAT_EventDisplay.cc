@@ -9,6 +9,18 @@
 #include "TMarker.h"
 #include "TLegend.h"
 #include "TPad.h"
+#include <iterator>
+using namespace std;
+TEllipseED::TEllipseED(Double_t x1, Double_t y1, Double_t r1, Double_t r2, Double_t phimin, Double_t phimax, Double_t theta): TEllipse(x1, y1, r1, r2, phimin, 360, theta)
+{
+  _jetindex = 255;
+}
+
+TEllipseED::~TEllipseED()
+{
+
+}
+
 void CFAT_Core::EventDisplay(const PullVector & pv, float pull_angle/*, const TVector2 & jet_difference*/, ChargeCode_t charge_code) 
 {
   if (event_display_mode_ == 0)
@@ -17,6 +29,7 @@ void CFAT_Core::EventDisplay(const PullVector & pv, float pull_angle/*, const TV
     return;
   static const float scale = 75.0;
   vector<TObject *> pointer_collector;
+  vector<TEllipseED *> ellipse_collector;
   gStyle -> SetOptStat(0);
   gROOT -> SetBatch(kTRUE); 
   //  const char* histogram_name[4] = {"leading_jet", "2nd_leading_jet", "other", "total"};
@@ -123,38 +136,81 @@ void CFAT_Core::EventDisplay(const PullVector & pv, float pull_angle/*, const TV
   leptmarker -> SetMarkerSize(14);
   pointer_collector.push_back(leptmarker);
   const unsigned char njets = 4;
+  static const char * jet_titles[njets] = {"leading_jet", "scnd_leading_jet", "had_b", "lept_b"};
+  const float jet_pt[njets] = {leading_jet -> Pt(), scnd_leading_jet -> Pt(), hadb -> Pt(), leptb -> Pt()};
   static const unsigned char jets[njets] = {LEADING_JET, SCND_LEADING_JET, HAD_B, LEPT_B};
   static const Color_t fill_colour[njets] = {kBlue, kRed, kGreen, kMagenta};
+  
   for (unsigned char jet_index = 0; jet_index < njets; jet_index ++)
     {
 
+      TLorentzVector checkpt(0.0, 0.0, 0.0, 0.0);
       const unsigned char vector_code = jets[jet_index];
       unsigned char ind = 0;
+      unsigned char nparticles = 0;
       for(pf_iter it = begin(vector_code); it != end(vector_code); it ++)
 	{
 	  if (charge_code == CHARGED and it -> GetCharge() == 0)
-	    continue;
+	    {
+	      printf("discarding neutral\n");
+	      continue;
+	    }
 	  TLorentzVector particle = it -> GetLorentzVector();
 	  ind ++;
+	  checkpt += particle;
+	  nparticles ++;
 	  const float rapidity = particle.Rapidity();
 	  const float phi   = particle.Phi();
 	  const float radius = particle.Pt()/GetVector(vector_code) -> Pt();
-	  TEllipse * ellipse = new TEllipse(phi, rapidity, radius, radius);
+	  TEllipseED * ellipse = new TEllipseED(phi, rapidity, radius, radius);
 	  pointer_collector.push_back(ellipse);
+	  ellipse -> _jetindex = jet_index;
+	  ellipse_collector.push_back(ellipse);
 	  //printf("Type %u Drawing %f %f %f\n", part_type_ind, Rapidity, phi, radius);
 	  ellipse -> SetFillColor(fill_colour[jet_index]);
-	  if (jet_index == 3)
-	    printf("part phi %f rapi %f\n", phi, rapidity);
+	  
+	  // if (jet_index == 3)
+	  //   printf("part phi %f rapi %f pt %f\n", phi, rapidity, particle.Pt());
 	  if (jet_index < 2)
 	    {
-	      canvas[jet_index] -> cd();
-	      ellipse -> Draw();
+	      canvas[jet_index] -> cd(); // vector_code??
+	      //ellipse -> Draw();
 	    }
 	  pad[0] -> cd();
-	  ellipse -> Draw();
+	  //ellipse -> Draw();
 	    
 	}
+      printf("jet %s pt from particles %f, jet_pt %f nparticles %u\n", jet_titles[jet_index], checkpt.Pt(), jet_pt[jet_index], nparticles);
     }
+  bool sorted = true;
+  do
+    {
+      sorted = true;
+      for (vector<TEllipseED *>::iterator it = next(ellipse_collector.begin()); it != ellipse_collector.end(); it ++)
+	{
+	  if ((*prev(it)) -> GetR1() < (*it) -> GetR1())
+	    {
+	      TEllipseED * swap = *it;
+	      * it = *prev(it);
+	      * prev(it) = *it;
+	      sorted = false;
+	    }
+	}
+	     
+    }
+  while (not sorted);
+  
+  for (vector<TEllipseED *>::iterator it = ellipse_collector.begin(); it != ellipse_collector.end(); it ++)
+    {
+      if ( (*it) -> _jetindex < 2)
+	{
+	  canvas[(*it) -> _jetindex] -> cd(); 
+	  (*it) -> Draw();
+	}
+      pad[0] -> cd();
+      (*it) -> Draw();
+    }
+
   pad[0] -> cd();
   pull_vector.Draw();
   jet_dif.Draw();

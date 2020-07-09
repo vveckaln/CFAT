@@ -37,8 +37,16 @@ PullVector CFAT_Core::CalculatePullVector(VectorCode_t vector_code, ChargeCode_t
   ret.origin_core_ptr_ = this;
   //  const TLorentzVector charged_jet = GetChargedJet(vector_code);
   const TLorentzVector *jet = /*charge_code == CHARGED ? & charged_jet : */GetVector(vector_code);
-  const TLorentzVector jet_test = GetJetFromParticles(vector_code);
-  jet = &jet_test;
+  const TLorentzVector dumm = GetJetFromParticles(vector_code, charge_code);
+  //  printf("dumm %f %f %u %u\n", dumm.Px(), dumm.Pz(), vector_code, charge_code);
+  const TLorentzVector * jet_test = GetVector(vector_code, "particle", charge_code); //GetJetFromParticles(vector_code, charge_code);
+  if (not jet_test)
+    throw "no jet";
+
+
+  if (fabs(jet_test -> Eta()) > 2.1) 
+    throw "abs(eta) > 2.1 ";
+  jet = jet_test;
 
   double Pt_jet_constituents = 0.0;
   unsigned short jet_const_index = 0;
@@ -72,7 +80,7 @@ PullVector CFAT_Core::CalculatePullVector(VectorCode_t vector_code, ChargeCode_t
       ind ++;
       if (std::isnan(constituent_4vector.Phi()))
 	{
-	  printf("constituent_4vector.Phi() not a number. Continuing to next component\n");
+	  printf("constituent_4vector.Phi() not OAa number. Continuing to next component\n");
 	  continue;
 	}
       const double mag = componentV2.Mod();
@@ -239,12 +247,14 @@ void CFAT_Core::SetEventDisplayMode(unsigned char mode)
   event_display_mode_ = mode;
 }
 
-void CFAT_Core::ls_particles(VectorCode_t vector_code)
+void CFAT_Core::ls_particles(VectorCode_t vector_code, ChargeCode_t charge_code)
 {
   unsigned int ind = 0;
   printf("\nCFAT_Core listing particles of vector %u\n", vector_code);
   for(pf_iter it = begin(vector_code); it != end(vector_code); it ++)
     {
+      if (charge_code == CHARGED and it -> GetCharge() == 0)
+	continue;
       const TLorentzVector particle = it -> GetLorentzVector(); 
       printf("ind %u, phi %f, eta %f, pt %f, m %f\n", ind, particle.Phi(), particle.Eta(), particle.Pt(), particle.M());
       ind ++;

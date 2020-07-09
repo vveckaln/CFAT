@@ -24,6 +24,7 @@ public:
   ColourFlowAnalysisTool();
   void     * plots_ptr_;
   void     * plots2D_ptr_;
+  void Reset();
   CFAT_Event * GetEvent() const;
   void SetEvent (CFAT_Event &);
   void SetWorkMode(WorkCode_t);

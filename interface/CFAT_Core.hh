@@ -1,4 +1,3 @@
-
 #ifndef _CFAT_Core_hh_
 #define _CFAT_Core_hh_
 //#include "PullVector.hh"
@@ -7,6 +6,7 @@
 #include "Definitions.hh"
 #include "TLorentzVector.h"
 #include "pf.hh"
+#include "TEllipse.h"
 
 class PullVector;
 class CFAT_Core
@@ -81,16 +81,25 @@ protected:
 
   void AnalyseJetConstituents();
   TLorentzVector GetJetFromParticles(VectorCode_t vector_code, ChargeCode_t = ALLCOMP) ;
-  virtual const TLorentzVector * GetVector(VectorCode_t) = 0;
+  virtual const TLorentzVector * GetVector(VectorCode_t, const char * particle = nullptr, ChargeCode_t = ALLCOMP) = 0;
   
   virtual void check(const char * = "") const = 0;
   void EventDisplay(const PullVector & pv, float pull_angle/*, const TVector2 & jet_difference*/, ChargeCode_t = ALLCOMP);
 public:
   CFAT_Core();
+  virtual void RecomputeJetsFromParticles() = 0;
+  virtual void Reset() = 0;
   CFAT_Event * GetCFATEvent();
   void SetEventDisplayMode(unsigned char);
-  void ls_particles(VectorCode_t);
+  void ls_particles(VectorCode_t, ChargeCode_t = ALLCOMP);
 };
 
+class TEllipseED: public TEllipse
+{
+public:
+  TEllipseED(Double_t x1, Double_t y1, Double_t r1, Double_t r2=0, Double_t phimin=0, Double_t phimax=360, Double_t theta=0);
+  unsigned char _jetindex;
+  virtual ~TEllipseED();
+};
 
 #endif

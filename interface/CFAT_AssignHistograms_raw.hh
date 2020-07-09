@@ -70,6 +70,7 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 			  const TString hash_key = TString(cat_title_PA[cat_index]) + "_" + 
 			    tag_charge_types_[charge_index] +
 			    postfix;
+			  //			  printf(" %u %s %u %f %f\n", cat_index, axes_PA[cat_index], nbins_PA[cat_index], min_PA[cat_index], max_PA[cat_index]); 
 			  CreateHistogram1DT(target, hash_key, axes_PA[cat_index], nbins_PA[cat_index], min_PA[cat_index], max_PA[cat_index]);
 			  //			  CreateHistogram1DT(target, hash_key + "_EXP",  axes_PA[cat_index], nbins_PA[cat_index], min_PA[cat_index], max_PA[cat_index]);
 

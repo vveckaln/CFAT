@@ -13,7 +13,6 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
   const static unsigned char Nplanes = 3;
   const static unsigned char Njets = 3;
   const TVector3 leading_light_jet_v3 = GetEvent() -> GetVector(LEADING_JET) -> Vect();
-  
   const TVector3 second_leading_light_jet_v3 = GetEvent() -> GetVector(SCND_LEADING_JET) -> Vect();
   const TVector3 had_b_jet_v3 = GetEvent() -> GetVector(HAD_B) -> Vect();
   ;
@@ -201,6 +200,7 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
 				case 0:
 				  if (it.GetIterCore() -> GetVectorCode() != 255 and (it.GetCore() -> GetVector(it.GetIterCore() -> GetVectorCode()) == it.GetCore() -> GetVector(SCND_LEADING_B) or it.GetCore() -> GetVector(it.GetIterCore() -> GetVectorCode()) == it.GetCore() -> GetVector(LEADING_B)))
 				    {
+
 				      /*				      printf("angle right %f leading %s 2nd leading %s\n", 
 					     angle_left_norm, 
 					     it.GetCore() -> GetVector(it.GetIterCore() -> GetVectorCode()) == it.GetCore() -> GetVector(LEADING_B) ? "true" : "false", 
