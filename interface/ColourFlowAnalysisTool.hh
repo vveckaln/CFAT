@@ -40,6 +40,7 @@ public:
   void Do();
   void AnalyseParticleFlow() const;
   void virtual ResetMigrationValues() = 0;
+  bool migrationvaluesstored;
   void virtual StoreMigrationValues(ChargeCode_t chargecode, VectorCode_t jetcode, double pa, double mag) = 0;
   void virtual PlotMigrationValues() = 0;
 

@@ -24,6 +24,7 @@ TLorentzVector CFAT_Core::GetJetFromParticles(VectorCode_t vector_code, ChargeCo
       if (charge_code == CHARGED and it -> GetCharge() == 0)
 	continue;
       constituent_4vector = it -> GetLorentzVector();
+      //      printf("constituent_4vector E %f Px %f Py %f Pz %f\n", constituent_4vector.E(), constituent_4vector.Px(), constituent_4vector.Py(), constituent_4vector.Pz());
       calculated_jet += constituent_4vector;
       
     }
@@ -236,6 +237,26 @@ void CFAT_Core::AnalyseJetConstituents()
       const unsigned char vector_code = jets[jet_index];
       const TString hist_title_EventChargedContentN = TString("JetConst_EventChargedContentN_") + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
       const TString hist_title_EventChargedContentE = TString("JetConst_EventChargedContentE_") + tag_levels_types_[work_mode_] + "_" + tag_jet_types_[vector_code];
+      // map<TString, pair<TH1*, TH2*> *>* maptest = (map<TString, pair<TH1*, TH2*> *>*) GetCFATEvent() -> GetCFAT() -> plots_ptr_;
+      // printf("map size %lu\n", maptest -> size());
+      // pair<TH1*, TH2*> * p = ((map<TString, pair<TH1*, TH2*> *>*) GetCFATEvent() -> GetCFAT() -> plots_ptr_) -> operator[](TString("L_") + hist_title_EventChargedContentN);
+      // TH1 * h = p -> first;
+      // h -> Print("all");
+      // TH2 * h2 = p -> second;
+      // TH1 * proj = h2 -> ProjectionX();
+      // proj -> Print("all");
+      // getchar();
+      // if (jet_index == 0)
+      // 	{
+      // 	  const float ratio = Ncharged[jet_index]/Nall[jet_index];
+      // 	  printf("%f %f %f \n", Ncharged[jet_index], Nall[jet_index], ratio);
+      // 	  int binindex = h -> FindBin(ratio);
+      // 	  //h -> GetBinWithContent(ratio, binindex);
+      // 	  printf("%f %f %f %u, %f\n", Ncharged[jet_index], Nall[jet_index], ratio, binindex, h -> GetBinCenter(binindex) );
+      // 	  getchar();
+      // 	}
+      // printf("%f %f\n", h -> GetBinWidth(1), h -> GetBinWidth(11));
+      // getchar();
       cfat -> Fill1D(hist_title_EventChargedContentN, Ncharged[jet_index]/Nall[jet_index]);
       cfat -> Fill1D(hist_title_EventChargedContentE, Echarged[jet_index]/Eall[jet_index]);
     }

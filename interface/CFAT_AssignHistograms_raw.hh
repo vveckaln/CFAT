@@ -256,21 +256,22 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 	    {
 	      for (unsigned char PA_plots_type_ind = 0; PA_plots_type_ind < N_PA_plots_types_; PA_plots_type_ind ++)
 		{
+		  const TString title = TString("; #Phi_{") + PA_plots_titles_[PA_plots_type_ind] + "}; Events";
 		  {
 		    const TString hash_key = TString("chiqlq2l_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_particles_types_[particle_index];
-		    CreateHistogram1DT(target, hash_key, "; #chi; Events", 40, -0.0, 1.0);
+		    CreateHistogram1DT(target, hash_key, title, 40, -0.0, 1.0);
 		  }
 		  {
 		    const TString hash_key = TString("chihbqc_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_particles_types_[particle_index];
-		    CreateHistogram1DT(target, hash_key, "; #chi; Events", 40, -0.0, 1.0);
+		    CreateHistogram1DT(target, hash_key, title, 40, -0.0, 1.0);
 		  }
 		  {
 		    const TString hash_key = TString("chiqfhb_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_particles_types_[particle_index];
-		    CreateHistogram1DT(target, hash_key, "; #chi; Events", 40, -0.0, 1.0);
+		    CreateHistogram1DT(target, hash_key, title, 40, -0.0, 1.0);
 		  }
 		  {
 		    const TString hash_key = TString("chiblb2l_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_particles_types_[particle_index];
-		    CreateHistogram1DT(target, hash_key, "; #chi; Events", 40, 0.0, 1.0);
+		    CreateHistogram1DT(target, hash_key, title, 40, 0.0, 1.0);
 		  }
 		}
 	    }
@@ -280,19 +281,29 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
   static const unsigned char jets[4] = {LEADING_JET, SCND_LEADING_JET, LEADING_B, SCND_LEADING_B};
   for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
     { 
-      for (VectorCode_t jet_index = 0; jet_index < 4; jet_index ++)
-	{
-	  unsigned char vector_code = jets[jet_index];
+      // for (VectorCode_t jet_index = 0; jet_index < 4; jet_index ++)
+      // 	{
+      // 	  unsigned char vector_code = jets[jet_index];
+      // 	  const unsigned char nbins = 11;
+      // 	  double bins[nbins + 1];
+      // 	  const float binmin = 0.0;
+      // 	  const float binmax = 1.0;
+      // 	  const float step = (binmax - binmin)/(nbins - 1);
+      // 	  for (unsigned char bind = 0; bind <= 10; bind ++)
+      // 	    {
+      // 	      bins[bind] = bind * step;
+      // 	    }
+      // 	  bins[nbins + 1] = bins[nbins] + step/2.0;
 	 
-	  {
-	    const TString hash_key = TString("JetConst_EventChargedContentN_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
-	    CreateHistogram1DT(target, hash_key, "; \\frac{charged}{all}; Events", 50, 0.0, 1.0);
-	  }
-	  {
-	    const TString hash_key = TString("JetConst_EventChargedContentE_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
-	    CreateHistogram1DT(target, hash_key, "; \\frac{charged}{all}; Events", 50, 0.0, 1.0);
-	  }
-	}
+      // 	  {
+      // 	    const TString hash_key = TString("JetConst_EventChargedContentN_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+      // 	    CreateHistogram1DT(target, hash_key, "; \\frac{charged}{all}; Events", nbins, bins);
+      // 	  }
+      // 	  {
+      // 	    const TString hash_key = TString("JetConst_EventChargedContentE_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+      // 	    CreateHistogram1DT(target, hash_key, "; \\frac{charged}{all}; Events", nbins, bins);
+      // 	  }
+      // 	}
       for (ChargeCode_t charge_code = 0; charge_code < N_charge_types_; charge_code ++)
 	{
 	  {
@@ -455,4 +466,36 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
     
   //  ConfigurePtRadiationProfileTool();
 
+}
+
+template<typename TargetType, typename CreateHistoType>
+void AssignHistograms_raw_array(TargetType  & target, CreateHistoType CreateHistogram1DT) 
+{
+  static const unsigned char jets[4] = {LEADING_JET, SCND_LEADING_JET, LEADING_B, SCND_LEADING_B};
+  for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
+    { 
+      for (VectorCode_t jet_index = 0; jet_index < 4; jet_index ++)
+	{
+	  unsigned char vector_code = jets[jet_index];
+	  const unsigned char nbins = 11;
+	  double bins[nbins + 1];
+	  const float binmin = 0.0;
+	  const float binmax = 1.0;
+	  const float step = (binmax - binmin)/(nbins - 1);
+	  for (unsigned char bind = 0; bind < nbins; bind ++)
+	    {
+	      bins[bind] = bind * step;
+	    }
+	  bins[nbins] = bins[nbins - 1] + step/2.0;
+	 
+	  {
+	    const TString hash_key = TString("JetConst_EventChargedContentN_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+	    CreateHistogram1DT(target, hash_key, "; \\frac{charged}{all}; Events", nbins, bins);
+	  }
+	  {
+	    const TString hash_key = TString("JetConst_EventChargedContentE_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+	    CreateHistogram1DT(target, hash_key, "; \\frac{charged}{all}; Events", nbins, bins);
+	  }
+	}
+    }
 }

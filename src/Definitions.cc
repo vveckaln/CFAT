@@ -31,13 +31,16 @@ const char          * Definitions::tag_particles_types_[N_particles_types_]    =
 
 const char            Definitions::N_PA_plots_types_                           = 3;
 const char          * Definitions::tag_PA_plots_types_[]                       = {"N", "E", "Pt"};
+const char          * Definitions::PA_plots_titles_[]                          = {"N", "E", "p_{T}"};
 
 const char            Definitions::N_channels_types_                           = 3;
 const char          * Definitions::tag_channels_types_[N_channels_types_]      = {"L", "E", "M"};
 
 const char          * Definitions::jet_titles_[]                               = {"1st leading jet", "2nd leading jet", "leading b", "2nd leading b", "hadronic $b$", "leptonic $b$", "hadronic $W$", "hadronic $t$", "$\\ell$", "$\\nu$", "leptonic $W$", "leptonic $t$", "beam" };
+const char          * Definitions::jet_names_[4]                               = {"leading_jet", "scnd_leading_jet", "leading_b", "scnd_leading_b"};
+
 const char          * Definitions::charge_titles_[]                            = {"all", "charged"};
-const char          * Definitions::level_titles_[]                             = {"reconstruction", "generation"};
+const char          * Definitions::level_titles_[]                             = {"reco", "gen"};
 const char          * Definitions::channel_titles_[]                           = {"common lepton", "$e$", "$\\mu$"};
 
 const unsigned char   Definitions::N_sources_types_                            = 2;

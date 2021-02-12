@@ -54,11 +54,13 @@ namespace Definitions
 
   extern const char            N_PA_plots_types_;
   extern const char          * tag_PA_plots_types_[];
-
+  extern const char          * PA_plots_titles_[];
+  
   extern const char            N_channels_types_;
   extern const char          * tag_channels_types_[];
 
   extern const char          * jet_titles_[];
+  extern const char          * jet_names_[4];
   extern const char          * charge_titles_[];
   extern const char          * level_titles_[];
   extern const char          * channel_titles_[];

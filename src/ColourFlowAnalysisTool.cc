@@ -17,11 +17,13 @@ void ColourFlowAnalysisTool::Work()
   PlotAngleBetweenJets();
   PlotJetDimensions();
   AnalyseParticleFlow();
-  
   for (VectorCode_t jet1_code = 0; jet1_code < 4; jet1_code ++)
     {
       if (not GetEvent() -> GetVector(jet1_code))
-	continue;
+	{
+	  //	  printf("continuing\n");
+	  continue;
+	}
       for (ChargeCode_t charge_code = 0; charge_code < 2; charge_code ++)
 	{
 	  try
@@ -89,6 +91,7 @@ void ColourFlowAnalysisTool::Work()
 			      nfill ++;
 			    
 			    }
+			  //	  printf("filling pull_angle %f\n", pull_angle);
 			  Fill1D(TString("pull_angle")     + infix + DeltaR_tag, pull_angle);
 			  //Fill1D(TString("cos_pull_angle") + infix + DeltaR_tag       + "_" + tag_channel_, cos_pull_angle);
 			  Fill1D(TString("pull_angle")     + infix + tag_DeltaR_types_[DELTAR_TOTAL], pull_angle);
@@ -116,18 +119,19 @@ void ColourFlowAnalysisTool::Work()
 		    }
 		  catch (const char * e)
 		    {
-		      //		      printf("Exception I: %s\n", e);
+		      //		      		      printf("Exception I: %s\n", e);
 		    }
 		}
 	    }
 	  catch(const char *e)
 	    {
 
-	      //printf("Exception II%s\n", e);
+	      //printf("Exception II: %s\n", e);
 	    }
 	}
+      // printf("probe CFAT\n");
 
-      //      continue;
+      //            continue;
       for (PF_PTCutCode_t pf_ptcut_code = 1; pf_ptcut_code < 3; pf_ptcut_code ++)
 	{
 	  try
@@ -380,7 +384,6 @@ void ColourFlowAnalysisTool::PlotAngleBetweenJets() const
 
 
 	  const double angle = GetEvent() -> Angle(jet1_code, jet2_code);
-	  
 	  Fill1D(hash_key1_angle, angle);
 	  const TString hash_key2_angle = TString("angle_") + 
 	    infix +
