@@ -99,6 +99,7 @@ extern int __Cling_Autoloading_Map;
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
     static const char* classesHeaders[]={
+"Definitions::WorkEnum_t", payloadCode, "@",
 "testfunc", payloadCode, "@",
 nullptr};
 

@@ -400,10 +400,8 @@ class __attribute__((annotate("$clingAutoload$interface/WeightRecord.hh")))  Wei
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
     static const char* classesHeaders[]={
-"Vari", payloadCode, "@",
 "WeightMap", payloadCode, "@",
 "WeightRecord", payloadCode, "@",
-"Weights", payloadCode, "@",
 nullptr};
 
     static bool isInitialized = false;
