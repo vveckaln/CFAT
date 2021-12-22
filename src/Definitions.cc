@@ -3,6 +3,10 @@
 
 /*using namespace Definitions;
 {*/
+// const map<WorkEnum_t, const char *>         tag_levels_types_ = {{WorkEnum_t::RECO, "reco"}, 
+// 									{WorkEnum_t::GEN, "gen"}};
+
+
 const char            Definitions::N_charge_types_                             = 2;
 const char          * Definitions::tag_charge_types_[2]                        = {"allconst", "chconst"};
 
@@ -40,7 +44,6 @@ const char          * Definitions::jet_titles_[]                               =
 const char          * Definitions::jet_names_[4]                               = {"leading_jet", "scnd_leading_jet", "leading_b", "scnd_leading_b"};
 
 const char          * Definitions::charge_titles_[]                            = {"all", "charged"};
-const char          * Definitions::level_titles_[]                             = {"reco", "gen"};
 const char          * Definitions::channel_titles_[]                           = {"common lepton", "$e$", "$\\mu$"};
 
 const unsigned char   Definitions::N_sources_types_                            = 2;

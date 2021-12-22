@@ -1,0 +1,6 @@
+<lcgdict>
+ <class name="WeightRecord"/>
+ <class name="WeightMap"/>
+ <class name="map<Definitions::Weights,WeightRecord>"/>
+ <class name="map<Variation, double>"/>
+</lcgdict>

@@ -13,6 +13,9 @@ using namespace Definitions;
 template<typename TargetType, typename CreateHistoType>
 void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1DT) 
 {
+  // const std::map<Definitions::WorkEnum_t, const char *>         tag_levels_types_ = {make_pair(WorkEnum_t::RECO, "reco"), 
+  // 								                                make_pair(WorkEnum_t::GEN, "gen")};
+
   /*for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
     {
 
@@ -44,12 +47,15 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
     {
       for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
 	{
+	  const WorkEnum_t workmode = WorkEnum_t(level_code); 
 	  for (unsigned char jet1_code = 0; jet1_code < 4; jet1_code ++)
 	    {
 	      for (VectorCode_t jet2_code = 0; jet2_code < N_jet_types_; jet2_code ++)
 		{
 		  if (jet1_code == jet2_code)
-		    continue;
+		    {
+		      continue;
+		    }
 		  if((jet1_code == LEADING_B or jet1_code == SCND_LEADING_B) and (jet2_code != LEADING_B and jet2_code != SCND_LEADING_B) 
 		     or (jet2_code == LEADING_B or jet2_code == SCND_LEADING_B) and (jet1_code != LEADING_B and jet1_code != SCND_LEADING_B))
 		    {
@@ -60,7 +66,7 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 		    }
 		  for (unsigned char DeltaR_index = 0; DeltaR_index < N_DeltaR_types_; DeltaR_index ++)
 		    {
-		      const TString postfix = TString("_") + tag_levels_types_[level_code] + "_" +
+		      const TString postfix = TString("_") + tag_levels_types_.at(workmode) + "_" +
 			tag_jet_types_[jet1_code] + "_" + 
 			tag_jet_types_[jet2_code] + "_" + 
 			tag_DeltaR_types_[DeltaR_index];
@@ -120,20 +126,21 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 	}
     }
 
-  static const unsigned char ncategories_PV = 6;
-  static const char * cat_title_PV[ncategories_PV]     = {"phi_PV",                "eta_PV",               "mag_PV",                 "phi_PV_bckg",           "eta_PV_bckg",            "mag_PV_bckg"};
-  static const unsigned short nbins_PV[ncategories_PV] = {80,                      80,                      80,                      80,                      80,                       80          };
-  static const double min_PV[ncategories_PV]           = {-0.008*TMath::Pi(),       -0.02,                   0.0,                      - TMath::Pi() -0.2,      - 5.0,                    0.0          };
-  static const double max_PV[ncategories_PV]           = {- min_PV[0],             -min_PV[1],              0.05,                     TMath::Pi() + 0.2,       5.0,                      6.0          };
-  static const char* axes_PV[ncategories_PV]           = {"; #phi [rad]; Events",  "; #eta [a.u.]; Events", "; magn. [a.u.]; Events", "; #phi [rad]; Events",   "; #eta [a.u.]; Events", "; magn. [a.u.]; Events"};
+  static const unsigned char ncategories_PV = 7;
+  static const char * cat_title_PV[ncategories_PV]     = {"phi_PV",                "rapidity_PV",               "mag_PV",          "mag_PV_par",                 "phi_PV_bckg",           "rapidity_PV_bckg",            "mag_PV_bckg"};
+  static const unsigned short nbins_PV[ncategories_PV] = {80,                      80,                      80,                    80,                           80,                      80,                       80          };
+  static const double min_PV[ncategories_PV]           = {-0.008*TMath::Pi(),       -0.02,                   0.0,                  0.0,                      - TMath::Pi() -0.2,      - 5.0,                    0.0          };
+  static const double max_PV[ncategories_PV]           = {- min_PV[0],             -min_PV[1],              0.05,                  0.05,                     TMath::Pi() + 0.2,       5.0,                      6.0          };
+  static const char* axes_PV[ncategories_PV]           = {"; #phi [rad]; Events",  "; y [a.u.]; Events", "; magn. [a.u.]; Events", "magn. [a.u.] ||; Events", "#phi [rad]; Events",   "; y [a.u.]; Events", "; magn. [a.u.]; Events"};
   for (unsigned char cat_index = 0; cat_index < ncategories_PV; cat_index++)
     {
       for (WorkCode_t level_index = 0; level_index < N_levels_types_; level_index ++)
 	{ 
+	  const WorkEnum_t workmode = WorkEnum_t(level_index); 
 	  for (unsigned char jet1_index = 0; jet1_index < 6; jet1_index ++)
 	    {
 	      const TString postfix = TString("_") + 
-		tag_levels_types_[level_index] + "_" +
+		tag_levels_types_.at(workmode) + "_" +
 		tag_jet_types_[jet1_index];
 	      for (unsigned char charge_index = 0; charge_index < 2; charge_index ++)
 		{
@@ -217,6 +224,8 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
     {
       for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
 	{ 
+	  const WorkEnum_t workmode = WorkEnum_t(level_code); 
+
 	  for (VectorCode_t jet1_code = 0; jet1_code < N_jet_types_; jet1_code ++)
 	    {
 	      if (not (jet1_code == BEAM or jet1_code == LEADING_JET or jet1_code == LEPTON))
@@ -225,7 +234,7 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 		{
 		  if (not (jet2_code == BEAM or jet2_code == LEADING_JET or jet2_code == LEPTON))
 		    continue;
-		  const TString postfix = TString("_") + tag_jet_types_[jet1_code] + "_" + tag_jet_types_[jet2_code] + "_" + tag_levels_types_[level_code] + "_" + tag_DeltaR_types_[DeltaR_index];
+		  const TString postfix = TString("_") + tag_jet_types_[jet1_code] + "_" + tag_jet_types_[jet2_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_DeltaR_types_[DeltaR_index];
 		  {
 		    const TString hash_key = TString("angle") + postfix; 
 		    CreateHistogram1DT(target, hash_key, "; angle [rad]; Events", 50, -0.1, TMath::Pi() + 0.1);
@@ -249,7 +258,8 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
   
   for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
     { 
-	  
+      const WorkEnum_t workmode = WorkEnum_t(level_code); 
+
       for (ChargeCode_t charge_code = 0; charge_code < N_charge_types_; charge_code ++)
 	{
 	  for (unsigned char particle_index = 0; particle_index < N_particles_types_; particle_index ++)
@@ -258,19 +268,19 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 		{
 		  const TString title = TString("; #Phi_{") + PA_plots_titles_[PA_plots_type_ind] + "}; Events";
 		  {
-		    const TString hash_key = TString("chiqlq2l_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_particles_types_[particle_index];
+		    const TString hash_key = TString("chiqlq2l_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_particles_types_[particle_index];
 		    CreateHistogram1DT(target, hash_key, title, 40, -0.0, 1.0);
 		  }
 		  {
-		    const TString hash_key = TString("chihbqc_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_particles_types_[particle_index];
+		    const TString hash_key = TString("chihbqc_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_particles_types_[particle_index];
 		    CreateHistogram1DT(target, hash_key, title, 40, -0.0, 1.0);
 		  }
 		  {
-		    const TString hash_key = TString("chiqfhb_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_particles_types_[particle_index];
+		    const TString hash_key = TString("chiqfhb_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_particles_types_[particle_index];
 		    CreateHistogram1DT(target, hash_key, title, 40, -0.0, 1.0);
 		  }
 		  {
-		    const TString hash_key = TString("chiblb2l_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_particles_types_[particle_index];
+		    const TString hash_key = TString("chiblb2l_") + tag_PA_plots_types_[PA_plots_type_ind] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_particles_types_[particle_index];
 		    CreateHistogram1DT(target, hash_key, title, 40, 0.0, 1.0);
 		  }
 		}
@@ -281,6 +291,7 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
   static const unsigned char jets[4] = {LEADING_JET, SCND_LEADING_JET, LEADING_B, SCND_LEADING_B};
   for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
     { 
+      const WorkEnum_t workmode = WorkEnum_t(level_code); 
       // for (VectorCode_t jet_index = 0; jet_index < 4; jet_index ++)
       // 	{
       // 	  unsigned char vector_code = jets[jet_index];
@@ -307,18 +318,18 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
       for (ChargeCode_t charge_code = 0; charge_code < N_charge_types_; charge_code ++)
 	{
 	  {
-	    const TString hash_key = TString("JetConst_EventE_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code];
+	    const TString hash_key = TString("JetConst_EventE_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode);
 	    CreateHistogram1DT(target, hash_key, "; E[GeV]; Events", 300, 0.0, 450.0);
 	  }
 	  for (VectorCode_t jet_index = 0; jet_index < 4; jet_index ++)
 	    {
 	      unsigned char vector_code = jets[jet_index];
 	      {
-		const TString hash_key = TString("JetConst_TotalE_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+		const TString hash_key = TString("JetConst_TotalE_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_jet_types_[vector_code];
 		CreateHistogram1DT(target, hash_key, "; E [GeV]; Events", 150, 0.0, 150.0);
 	      }
 	      {
-		const TString hash_key = TString("JetConst_E_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+		const TString hash_key = TString("JetConst_E_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_jet_types_[vector_code];
 		CreateHistogram1DT(target, hash_key, "; E [GeV]; Events", 30, 0.0, 20.0);
 	      }
 
@@ -332,7 +343,7 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 	      // 	CreateHistogram1DT(target, hash_key, "; Py[GeV]; Events", 100, 0.0, 100.0);
 	      // }
 	      {
-		const TString hash_key = TString("JetConst_Pt_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+		const TString hash_key = TString("JetConst_Pt_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_jet_types_[vector_code];
 		CreateHistogram1DT(target, hash_key, "; Pt [GeV]; Events", 30, 0.0, 20.0);
 	      }
 	      // {
@@ -340,12 +351,12 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 	      // 	CreateHistogram1DT(target, hash_key, "; Pz[GeV]; Events", 75, 0.0, 100.0);
 	      // }
 	      {
-		const TString hash_key = TString("JetConst_M_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+		const TString hash_key = TString("JetConst_M_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_jet_types_[vector_code];
 		CreateHistogram1DT(target, hash_key, "; M [GeV]; Events", 150, -0.1, 1.5);
 	      }
 
 	      {
-		const TString hash_key = TString("JetConst_N_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+		const TString hash_key = TString("JetConst_N_") + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(workmode) + "_" + tag_jet_types_[vector_code];
 		CreateHistogram1DT(target, hash_key, "; number; Events", 36, -0.5, 35.5);
 	      }
 
@@ -399,9 +410,11 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 */
   for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
     { 
+      const WorkEnum_t workmode = WorkEnum_t(level_code); 
+
       for (VectorCode_t jet1_code = 0; jet1_code < N_jet_types_; jet1_code ++)
 	{
-	  const TString postfix = TString("_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[jet1_code]; 
+	  const TString postfix = TString("_") + tag_levels_types_.at(workmode) + "_" + tag_jet_types_[jet1_code]; 
 	    
 	  /*{
 	    const TString hash_key = TString("jet_phi") + postfix;
@@ -448,6 +461,13 @@ void AssignHistograms_raw(TargetType  & target, CreateHistoType CreateHistogram1
 	    const TString hash_key = TString("jet_pt") + postfix;
 	    CreateHistogram1DT(target, hash_key, "; pt; Events", 100, 0.0, pt_max[jet1_code]);
 	  }
+	  {
+	    //	    enum VectorEnum_t     {LEADING_JET, SCND_LEADING_JET, HAD_B, HAD_W, HAD_T, LEPTON, NEUTRINO, LEPT_B, LEPT_W, LEPT_T, BEAM, FAKE };
+
+	    const float pt_max[N_jet_types_] = {200.0, 200.0, 200.0, 200.0, 200.0, 250.0, 250.0, 200.0, 200.0, 200.0, 250.0, 250.0, 200.0, 200.0};
+	    const TString hash_key = TString("jet_pt_nosf") + postfix;
+	    CreateHistogram1DT(target, hash_key, "; pt; Events", 100, 0.0, pt_max[jet1_code]);
+	  }
 	  /*
 	  {
 	    const TString hash_key = TString("jet_pz") + postfix;
@@ -474,6 +494,7 @@ void AssignHistograms_raw_array(TargetType  & target, CreateHistoType CreateHist
   static const unsigned char jets[4] = {LEADING_JET, SCND_LEADING_JET, LEADING_B, SCND_LEADING_B};
   for (WorkCode_t level_code = 0; level_code < N_levels_types_; level_code ++)
     { 
+      const WorkEnum_t workmode = WorkEnum_t(level_code); 
       for (VectorCode_t jet_index = 0; jet_index < 4; jet_index ++)
 	{
 	  unsigned char vector_code = jets[jet_index];
@@ -489,11 +510,11 @@ void AssignHistograms_raw_array(TargetType  & target, CreateHistoType CreateHist
 	  bins[nbins] = bins[nbins - 1] + step/2.0;
 	 
 	  {
-	    const TString hash_key = TString("JetConst_EventChargedContentN_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+	    const TString hash_key = TString("JetConst_EventChargedContentN_") + tag_levels_types_.at(workmode) + "_" + tag_jet_types_[vector_code];
 	    CreateHistogram1DT(target, hash_key, "; \\frac{charged}{all}; Events", nbins, bins);
 	  }
 	  {
-	    const TString hash_key = TString("JetConst_EventChargedContentE_") + tag_levels_types_[level_code] + "_" + tag_jet_types_[vector_code];
+	    const TString hash_key = TString("JetConst_EventChargedContentE_") + tag_levels_types_.at(workmode) + "_" + tag_jet_types_[vector_code];
 	    CreateHistogram1DT(target, hash_key, "; \\frac{charged}{all}; Events", nbins, bins);
 	  }
 	}

@@ -27,7 +27,7 @@ CFAT_Event::CFAT_Event()
   
 {
   event_number_                    = 0;
-  work_mode_                       = 0;
+  work_mode_                       = WorkEnum_t::GEN;
   had_W_ptr_                       = nullptr;
   had_t_ptr_                       = nullptr;
   
@@ -54,15 +54,11 @@ void CFAT_Event::SetCore(CFAT_Core & core)
   core.cfat_event_ = this;
 }
 
-void CFAT_Event::SetWeights(vector<double> w)
-{
-  weights_ = w;
-}
 
-vector<double> CFAT_Event::GetWeights() const
-{
-  return weights_;
-}
+// vector<double> CFAT_Event::GetWeights() const
+// {
+//   return weights_;
+// }
 
 void CFAT_Event::SetEventNumber(unsigned long numb)
 {
@@ -178,7 +174,7 @@ void CFAT_Event::CompleteVectors()
   
 }
 
-void CFAT_Event::SetWorkMode(WorkCode_t work_code)
+void CFAT_Event::SetWorkMode(WorkEnum_t work_code)
 {
   work_mode_ = work_code;
   GetCore() -> SetWorkMode(work_code);
@@ -189,31 +185,38 @@ double CFAT_Event::Angle(VectorCode_t code1, VectorCode_t code2) const
   const TLorentzVector * jet1 = GetVector(code1);
   const TLorentzVector * jet2 = GetVector(code2);
   if (not jet1 or not jet2)
-    throw "CFAT_Event::Angle(VectorCode_t, VectorCode_t) : null vectors. Please Check!";
+    {
+      throw "CFAT_Event::Angle(VectorCode_t, VectorCode_t) : null vectors. Please Check!";
+    }
   if (jet1 == beam_ptr_)
     {
       if (jet2 == beam_ptr_)
-	return 0.0;
+	{
+	  return 0.0;
+	}
       else
-	return TMath::ACos(jet2 -> Pz() / jet2 -> Vect().Mag());
+	{
+	  return TMath::ACos(jet2 -> Pz() / jet2 -> Vect().Mag());
+	}
     }
   else
     { 
       if (jet2 == beam_ptr_)
-	return TMath::ACos(jet1 -> Pz() / jet1 -> Vect().Mag());
-      else
-	if ((code1 == HAD_B or code1 == HAD_T) and (code2 == HAD_B or code2 == HAD_T) and work_mode_ == 0)
+	{
+	  return TMath::ACos(jet1 -> Pz() / jet1 -> Vect().Mag());
+	}
+      else if ((code1 == HAD_B or code1 == HAD_T) and (code2 == HAD_B or code2 == HAD_T) and work_mode_ == WorkEnum_t::GEN)
 	  
-	  	  {
-		    /*  printf("code1 %u code2 %u\n", code1, code2);
-	    printf("jet 1 px %f py %f pz %f\n", jet1 -> Px(), jet1 -> Py(), jet1 -> Pz());
-	    printf("jet 2 px %f py %f pz %f\n", jet2 -> Px(), jet2 -> Py(), jet2 -> Pz());
-	    printf("angle %f\n", jet1 -> Angle(jet2 -> Vect()));
-	    printf("angle %f\n", jet1 -> Vect() . Angle(jet2 -> Vect()));
-	    printf("angle %f\n", TVector3(jet1 -> Px(), jet1 -> Py(), 0.0).Angle(TVector3(jet2 -> Px(), jet2 -> Py(), 0.0)));
-	    getchar();
+	{
+	  /*  printf("code1 %u code2 %u\n", code1, code2);
+	      printf("jet 1 px %f py %f pz %f\n", jet1 -> Px(), jet1 -> Py(), jet1 -> Pz());
+	      printf("jet 2 px %f py %f pz %f\n", jet2 -> Px(), jet2 -> Py(), jet2 -> Pz());
+	      printf("angle %f\n", jet1 -> Angle(jet2 -> Vect()));
+	      printf("angle %f\n", jet1 -> Vect() . Angle(jet2 -> Vect()));
+	      printf("angle %f\n", TVector3(jet1 -> Px(), jet1 -> Py(), 0.0).Angle(TVector3(jet2 -> Px(), jet2 -> Py(), 0.0)));
+	      getchar();
 	  */  }
-	return jet1 -> Angle(jet2 -> Vect());
+      return jet1 -> Angle(jet2 -> Vect());
     }
 }
 
@@ -254,11 +257,14 @@ double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2, const ch
     throw "double CFAT_Event::PullAngle(const PullVector &, VectorCode_t) : zero pull vector";
  
   if (jet2 == beam_ptr_)
-    return TMath::ACos(pv.eta_component / pv.Mod());
+    return TMath::ACos(pv.GetRapidityComponent() / pv.Mod());
   else
     {
       
-      const TVector2 jet_difference(TVector2::Phi_mpi_pi(jet2 -> Phi() - jet1 -> Phi()), jet2 -> Rapidity() - jet1 -> Rapidity());
+
+      // printf("jet 2 rapidity %f phi%f \n", jet2 -> Rapidity(), TVector2::Phi_mpi_pi(jet2 -> Phi()));
+      // printf("jet 1 rapidity %f phi%f \n", jet1 -> Rapidity(), TVector2::Phi_mpi_pi(jet1 -> Phi()));
+      const TVector2 jet_difference(jet2 -> Rapidity() - jet1 -> Rapidity(), TVector2::Phi_mpi_pi(jet2 -> Phi()) - TVector2::Phi_mpi_pi(jet1 -> Phi()));
       
       
   
@@ -280,11 +286,13 @@ double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2, const ch
       }	  
       const double result = TVector2::Phi_mpi_pi(jet_difference.Phi() - pv.Phi());
       printf(" result %f \n", result);*/
-      if (std::isnan(jet_difference.Phi() - pv.Phi()))
+      //printf("jet difference rapidity component %f phi component %f\n", jet_difference.X(), jet_difference.Y(), jet_difference.Phi());
+      if (std::isnan(-jet_difference.Phi() + pv.Phi()))
 	{
 	  throw "double CFAT_Event::PullAngle(const PullVector & pv, VectorCode_t code2) const: result NaN";
 	}
-      return TVector2::Phi_mpi_pi(jet_difference.Phi() - pv.Phi());//Must be pv.Phi()
+      //      printf("pull_vector phi %f dvector.phi %f difference phi %f\n", pv.Phi(), jet_difference.Phi(), TVector2::Phi_mpi_pi(-jet_difference.Phi() + pv.Phi()));
+      return  TVector2::Phi_mpi_pi(pv.Phi() - jet_difference.Phi() );//Must be pv.Phi()
     }
       
 }
@@ -301,7 +309,7 @@ double CFAT_Event::PullAngleEXP(const PullVector & pv, VectorCode_t code2) const
     throw "double CFAT_Event::PullAngle(const PullVector &, VectorCode_t) : zero pull vector";
  
   if (jet2 == beam_ptr_)
-    return TMath::ACos(pv.eta_component / pv.Mod());
+    return TMath::ACos(pv.GetRapidityComponent() / pv.Mod());
   else
     {
       TLorentzVector jet1_unboost = *jet1;
@@ -314,7 +322,7 @@ double CFAT_Event::PullAngleEXP(const PullVector & pv, VectorCode_t code2) const
       const double by_sumjet = b_sumjet * sumjet.Py()/sumjet.P(); 
       jet1_unboost.Boost(-bx_sumjet, -by_sumjet, -bz_sumjet);
       jet2_unboost.Boost(-bx_sumjet, -by_sumjet, -bz_sumjet);
-      const TVector2 jet_difference(/*jet2_unboost.Phi() - jet1_unboost.Phi()*/ 0.0, jet2_unboost.Rapidity() - jet1_unboost.Rapidity());
+      const TVector2 jet_difference(/*jet2_unboost.Phi() - jet1_unboost.Phi()*/ jet2_unboost.Rapidity() - jet1_unboost.Rapidity(), 0.0);
       //      printf("jet diff px %f py %f pv px %f py %f\n", jet_difference.Px(), jet_difference.Py(), pv.Px(), pv.Py());
       if (std::isnan(jet_difference.Phi() - pv.Phi()))
 	{

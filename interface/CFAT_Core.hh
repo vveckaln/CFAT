@@ -16,7 +16,7 @@ class CFAT_Core
 protected:
   virtual const TLorentzVector *& GetVectorRef(VectorCode_t code) = 0; 
   unsigned char      event_display_mode_;
-  WorkCode_t         work_mode_;
+  WorkEnum_t         work_mode_;
   const void       * event_ptr_;
   CFAT_Event       * cfat_event_;
 
@@ -73,14 +73,14 @@ protected:
   virtual pf_iter end(VectorCode_t) = 0;
   virtual pf_iter begin() = 0;
   virtual pf_iter end() = 0;
-  virtual void SetWorkMode(WorkCode_t work_code) = 0;
+  virtual void SetWorkMode(WorkEnum_t work_code) = 0;
 
  
   PullVector                       CalculatePullVector(VectorCode_t, ChargeCode_t = ALLCOMP, PF_PTCutCode_t = PF_PT_TOTAL) ; 
   PullVector                       CalculatePullVectorEXP(VectorCode_t, VectorCode_t, ChargeCode_t = ALLCOMP, PF_PTCutCode_t = PF_PT_TOTAL) ; 
 
   void AnalyseJetConstituents();
-  TLorentzVector GetJetFromParticles(VectorCode_t vector_code, ChargeCode_t = ALLCOMP) ;
+  TLorentzVector GetJetFromParticles(VectorCode_t vector_code, ChargeCode_t = ALLCOMP, PF_PTCutCode_t = PF_PT_GT_1p0_GEV) ;
   virtual const TLorentzVector * GetVector(VectorCode_t, const char * particle = nullptr, ChargeCode_t = ALLCOMP) = 0;
   
   virtual void check(const char * = "") const = 0;

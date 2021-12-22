@@ -5,7 +5,7 @@
 
 PullVector CFAT_Core::CalculatePullVectorEXP(VectorCode_t vector_code, VectorCode_t vector_code2, ChargeCode_t charge_code, PF_PTCutCode_t pf_ptcut_code) 
 {
-  PullVector ret(0.0, 0.0);
+  PullVector ret;
   ret.origin_jet = vector_code;
   ret.origin_core_ptr_ = this;
   //  const TLorentzVector charged_jet = GetChargedJet(vector_code);
@@ -45,8 +45,8 @@ PullVector CFAT_Core::CalculatePullVectorEXP(VectorCode_t vector_code, VectorCod
       jet_const_index ++; 
       Pt_jet_constituents += constituent_4vector.Pt();
       const TVector2 componentV2 = TVector2(
-					    TVector2::Phi_mpi_pi(constituent_4vector.Phi() - jet1_unboost.Phi()), 
-					    constituent_4vector.Rapidity() - jet1_unboost.Rapidity());
+					    constituent_4vector.Rapidity() - jet1_unboost.Rapidity(),
+					    TVector2::Phi_mpi_pi(constituent_4vector.Phi() - jet1_unboost.Phi())); 
       //  printf("ind %u component rapidity %f phi %f diference rapidity %f phi %f\n", ind, constituent_4vector.Rapidity(), constituent_4vector.Phi(), componentV2.Py(), componentV2.Px());
       ind ++;
       if (std::isnan(constituent_4vector.Phi()))
@@ -59,11 +59,11 @@ PullVector CFAT_Core::CalculatePullVectorEXP(VectorCode_t vector_code, VectorCod
       ret.Ncomponents ++;
       if (vector_code2 == SCND_LEADING_JET)
 	{
-	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jetsum_lab_frame")   + "_" + tag_jet_types_[HAD_W] + "_" + tag_levels_types_[work_mode_], b_sum);
-	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jet_lab_frame")      + "_" + tag_levels_types_[work_mode_], b_jet);
+	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jetsum_lab_frame")   + "_" + tag_jet_types_[HAD_W] + "_" + tag_levels_types_.at(work_mode_), b_sum);
+	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jet_lab_frame")      + "_" + tag_levels_types_.at(work_mode_), b_jet);
 
-	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jet_jetsum_frame")   + "_" + tag_levels_types_[work_mode_], jet1_unboost.P()/sqrt(pow(jet1_unboost.P(), 2) + pow(jet1_unboost.M(), 2)));
-	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_particle_jet_frame") + "_" + tag_levels_types_[work_mode_], constituent_4vector.P()/sqrt(pow(constituent_4vector.P(), 2) + pow(constituent_4vector.M(), 2)));
+	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_jet_jetsum_frame")   + "_" + tag_levels_types_.at(work_mode_), jet1_unboost.P()/sqrt(pow(jet1_unboost.P(), 2) + pow(jet1_unboost.M(), 2)));
+	  GetCFATEvent() -> GetCFAT() -> Fill1D(TString("beta_particle_jet_frame") + "_" + tag_levels_types_.at(work_mode_), constituent_4vector.P()/sqrt(pow(constituent_4vector.P(), 2) + pow(constituent_4vector.M(), 2)));
 	}
     }
   if (Pt_jet_constituents < 1E-10)
@@ -74,14 +74,14 @@ PullVector CFAT_Core::CalculatePullVectorEXP(VectorCode_t vector_code, VectorCod
   const double scale = Pt_jet_constituents;
   ret /= scale;
   // printf ("pull vector Mod %f\n", ret.Mod());
-  if (std::isnan(ret.phi_component))
+  if (std::isnan(ret.GetPhiComponent()))
     {
       throw "PullVector CFAT_Event::CalculatePullVectorEXP(VectorCode_t, ChargeCode_t, PF_PTCutCode_t) const: pull vector phi component NaN";
 
     }
-  if (std::isnan(ret.eta_component))
+  if (std::isnan(ret.GetRapidityComponent()))
     {
-      throw "PullVector CFAT_Event::CalculatePullVectorEXP(VectorCode_t, ChargeCode_t, PF_PTCutCode_t) const: pull vector eta component NaN";
+      throw "PullVector CFAT_Event::CalculatePullVectorEXP(VectorCode_t, ChargeCode_t, PF_PTCutCode_t) const: pull vector rapidity component NaN";
 
     }
   return ret;

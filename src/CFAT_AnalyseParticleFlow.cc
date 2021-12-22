@@ -9,7 +9,10 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
   
 
   if (not GetEvent() -> GetVector(HAD_B))
-    return;
+    {
+      //printf("no HAD_B\n");
+      return;
+    }
   const static unsigned char Nplanes = 3;
   const static unsigned char Njets = 3;
   const TVector3 leading_light_jet_v3 = GetEvent() -> GetVector(LEADING_JET) -> Vect();
@@ -66,9 +69,9 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
 			  //			  printf("%f\n", angle_left_norm);
 			  //			  printf("angle right %f left %f right + left %f DefAngle %f\n", plane -> angle_left(particle_v3), plane -> angle_left(particle_v3),  plane -> angle_left(particle_v3) + plane -> angle_left(particle_v3), plane -> DefAngle());
 	      
-			  const TString prefix_PA_N = TString("chi") + plane_titles[plane_index] + "_" + tag_PA_plots_types_[PA_N] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_particles_types_[particle_code];
-			  const TString prefix_PA_E = TString("chi") + plane_titles[plane_index] + "_" + tag_PA_plots_types_[PA_E] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_particles_types_[particle_code];
-			  const TString prefix_PA_PT = TString("chi") + plane_titles[plane_index] + "_" + tag_PA_plots_types_[PA_PT] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_particles_types_[particle_code];
+			  const TString prefix_PA_N = TString("chi") + plane_titles[plane_index] + "_" + tag_PA_plots_types_[PA_N] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(work_mode_) + "_" + tag_particles_types_[particle_code];
+			  const TString prefix_PA_E = TString("chi") + plane_titles[plane_index] + "_" + tag_PA_plots_types_[PA_E] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(work_mode_) + "_" + tag_particles_types_[particle_code];
+			  const TString prefix_PA_PT = TString("chi") + plane_titles[plane_index] + "_" + tag_PA_plots_types_[PA_PT] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(work_mode_) + "_" + tag_particles_types_[particle_code];
 
 			  if (particle_code == ALLPRT)
 			    {
@@ -171,9 +174,9 @@ void ColourFlowAnalysisTool::AnalyseParticleFlow() const
 			  //			  printf("%f\n", angle_left_norm);
 			  //			  printf("angle right %f left %f right + left %f DefAngle %f\n", plane -> angle_left(particle_v3), plane -> angle_left(particle_v3),  plane -> angle_left(particle_v3) + plane -> angle_left(particle_v3), plane -> DefAngle());
 	      
-			  const TString prefix_PA_Nj = TString("chiblb2l_") + tag_PA_plots_types_[PA_N] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_particles_types_[particle_code];
-			  const TString prefix_PA_Ej = TString("chiblb2l_") + tag_PA_plots_types_[PA_E] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_particles_types_[particle_code];
-			  const TString prefix_PA_PTj = TString("chiblb2l_") + tag_PA_plots_types_[PA_PT] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_[work_mode_] + "_" + tag_particles_types_[particle_code];
+			  const TString prefix_PA_Nj = TString("chiblb2l_") + tag_PA_plots_types_[PA_N] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(work_mode_) + "_" + tag_particles_types_[particle_code];
+			  const TString prefix_PA_Ej = TString("chiblb2l_") + tag_PA_plots_types_[PA_E] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(work_mode_) + "_" + tag_particles_types_[particle_code];
+			  const TString prefix_PA_PTj = TString("chiblb2l_") + tag_PA_plots_types_[PA_PT] + "_" + tag_charge_types_[charge_code] + "_" + tag_levels_types_.at(work_mode_) + "_" + tag_particles_types_[particle_code];
 
 			  if (particle_code == ALLPRT)
 			    {

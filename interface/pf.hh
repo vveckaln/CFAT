@@ -8,7 +8,7 @@ public:
   virtual double GetCharge() const = 0;
   virtual TLorentzVector GetLorentzVector() const = 0;
   
-  void ls() const;
+  virtual void ls() const;
 
   void Do();
 };

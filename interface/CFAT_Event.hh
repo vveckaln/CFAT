@@ -19,7 +19,7 @@ class CFAT_Event
   friend class ColourFlowAnalysisTool;
   ColourFlowAnalysisTool        *  cfat_;
   CFAT_Core                     *  core_ptr_;
-  WorkCode_t                       work_mode_;
+  WorkEnum_t                       work_mode_;
   unsigned long                    event_number_;
   
   const TLorentzVector           * had_W_ptr_;
@@ -40,7 +40,7 @@ class CFAT_Event
   } store_;
   const TLorentzVector *&          GetVectorRef(VectorCode_t) ;
   TLorentzVector &                 GetStoreRef(VectorCode_t);
-  void                             SetWorkMode(WorkCode_t);
+  void                             SetWorkMode(WorkEnum_t);
   void                             SetVector(VectorCode_t, const TLorentzVector &);
 public:
   void                             Reset();
@@ -48,15 +48,14 @@ public:
   CFAT_Core *                      GetCore() const ;
   ColourFlowAnalysisTool *         GetCFAT();
 
-  vector<double>                   weights_;
   CFAT_Event();
   void                             AddLightJets(const vector<TLorentzVector> &, const vector<unsigned short> &);
   void                             AddBJets(const vector<TLorentzVector> &, const vector<unsigned short> &);
   void                             CompleteVectors();
   TLorentzVector                   GetChargedJet(VectorCode_t) const;
   void                             SetCore(CFAT_Core &);
-  void                             SetWeights(vector<double>);
-  vector<double>                   GetWeights() const;
+  //void                             SetWeights(vector<double>);
+  //  vector<double>                   GetWeights() const;
   void                             SetEventNumber(unsigned long);
   void                             AddVector(VectorCode_t, const TLorentzVector *);
   const TLorentzVector * const     GetVector(VectorCode_t, const char * = 0, ChargeCode_t = ALLCOMP) const;

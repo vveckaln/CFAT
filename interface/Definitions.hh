@@ -1,10 +1,15 @@
 #ifndef _Definitions_hh_
 #define _Definitions_hh_
+#include <map>
 
 #define N_channels_types 3
 #include "TH1F.h"
+#include "WorkEnum_t.hh"
+using namespace std;
+//ClassDef(Definitions::WorkEnum_t, 1)
 namespace Definitions
 {
+  //  #include "WorkEnum_t.hh"
 
   enum VectorEnum_t     {LEADING_JET, SCND_LEADING_JET, LEADING_B, SCND_LEADING_B, HAD_B, LEPT_B, HAD_W, HAD_T, LEPTON, NEUTRINO, LEPT_W, LEPT_T, BEAM, FAKE, ALLJETS = 255 };
   enum ParticlesEnum_t  {ALLPRT, JETPRT};
@@ -18,6 +23,7 @@ namespace Definitions
   enum PA_plots_t       {PA_N, PA_E, PA_PT};
   enum Source_t         {MC, DATA};
   enum SelectionStage_t{L1, L1JGEQ4, L1JGEQ4B2, L1J4B2LJ2};
+  //  enum class WorkEnum_t {RECO, GEN};
   typedef unsigned char VectorCode_t;
   typedef unsigned char ChannelCode_t;
   typedef unsigned char sourceCode_t;
@@ -32,7 +38,8 @@ namespace Definitions
   extern const char          * tag_jet_types_[];
 
   extern const unsigned char   N_levels_types_;
-  extern const char          * tag_levels_types_[];
+  
+  extern const char          * level_titles_[];
 
   extern const unsigned char   N_DeltaR_types_;
   extern const char          * tag_DeltaR_types_[];
@@ -62,7 +69,6 @@ namespace Definitions
   extern const char          * jet_titles_[];
   extern const char          * jet_names_[4];
   extern const char          * charge_titles_[];
-  extern const char          * level_titles_[];
   extern const char          * channel_titles_[];
 
   extern const unsigned char   N_sources_types_;
