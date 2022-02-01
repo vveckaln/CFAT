@@ -170,6 +170,8 @@ double WeightMap::GetWeight(Weights wgt, Vari vari, WorkEnum_t workmode)
 
 double WeightMap::GetWeight0(WorkEnum_t wmode)
 {
+  if (_weightmap.size() == 0)
+    return 1.0;
   return GetWeight(Weights::NORM, Vari::NOMINAL, wmode) * 
     GetWeight(Weights::PU,              Vari::NOMINAL, wmode) * 
     GetWeight(Weights::TRIGSF,          Vari::NOMINAL, wmode) * 
@@ -187,12 +189,14 @@ void WeightMap::Reset()
 
 void WeightMap::ls()
 {
+  printf("listing weight map\n[");
   for (map<Weights, WeightRecord>::iterator it = _weightmap.begin(); it != _weightmap.end(); it ++)
     {
       printf("%d\n", it -> first);
       printf("%s:\n", weightstitles.at(it -> first).Data());
       it -> second.ls();
     }
+  printf("\n]\n");
 }
 
 void WeightMap::Do()

@@ -139,9 +139,13 @@ void ColourFlowAnalysisTool::Work()
 			      Fill1D(TString("mag_PV") + suffix, pull_vector.Mod());
 			      if (DeltaR > 1.0)
 				{
-				  const double pull_vector_par = pull_vector.Mod()*TMath::Abs(TMath::Cos(pull_angle));
-				  //printf("probe CF A\n");
-				  Fill1D(TString("mag_PV_par") + suffix, pull_vector_par);
+				  double pull_vector_par = -10.0;
+				  if (TMath::Cos(pull_angle) > 0.0)
+				    {
+				      pull_vector_par = pull_vector.Mod()*TMath::Cos(pull_angle);
+				      //printf("probe CF A\n");
+				      Fill1D(TString("mag_PV_par") + suffix, pull_vector_par);
+				    }
 				  //printf("probe CF B\n");
 				  if (work_mode_ == WorkEnum_t::RECO and charge_code == CHARGED and jet1_code == LEADING_JET and jet2_code == SCND_LEADING_JET and GetEvent() -> GetEventNumber() == 781)
 				    {
